@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,5 +25,7 @@ public class MusicFragment extends Fragment{
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
         }
+
+        MediaStore.Audio.
     }
 }
