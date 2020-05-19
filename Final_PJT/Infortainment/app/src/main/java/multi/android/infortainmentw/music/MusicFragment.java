@@ -26,6 +26,6 @@ public class MusicFragment extends Fragment{
         if (getArguments() != null) {
         }
 
-        MediaStore.Audio.
+        //MediaStore.Audio.
     }
 }
