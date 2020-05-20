@@ -1,8 +1,10 @@
 package multi.android
         .infortainmentw;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -29,12 +32,18 @@ import java.util.StringTokenizer;
 
 import multi.android.infortainmentw.control.Control;
 import multi.android.infortainmentw.music.MusicFragment;
+import multi.android.infortainmentw.navi.FindAddress;
+import multi.android.infortainmentw.navi.NaviFragment;
+import multi.android.infortainmentw.navi.NaviMain;
 
 public class MainActivity extends AppCompatActivity {
     // ================================
     // 프래그먼트
     Control control = new Control();
     MusicFragment musicFragment = new MusicFragment();
+    FindAddress findAddress = new FindAddress();
+    NaviFragment naviFragment = new NaviFragment();
+    NaviMain naviMain = new NaviMain();
     // =================================
     // 소켓, 입출력변수
     Socket socket;
@@ -53,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+                &&ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.ACCESS_COARSE_LOCATION},1);
+
+        }
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -64,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.fragment_control, control);
         transaction.replace(R.id.fragment_music, musicFragment);
+        transaction.replace(R.id.navi_frag,naviMain).commit();
 
         new AsyncTask<String, String, String>() {
             String temporature="";
@@ -205,6 +220,18 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         thread.start();
+    }
+    public void replaceFragmentFindAddress(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.navi_frag,findAddress);
+        transaction.commit();
+    }
+    public void replaceFragmentMap(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.navi_frag,naviFragment);
+        transaction.commit();
     }
 
 }

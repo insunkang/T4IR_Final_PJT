@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".navi.NaviFragment">
+<androidx.drawerlayout.widget.DrawerLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+       <com.google.android.gms.maps.MapView
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:id="@+id/map"
+
+           />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/findAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="목적지설정" />
+            <Button
+                android:id="@+id/road"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="길찾기"/>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>
