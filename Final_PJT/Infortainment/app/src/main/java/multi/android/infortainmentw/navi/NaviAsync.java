@@ -106,14 +106,9 @@ public class NaviAsync extends Fragment {
 
             while(isRunning) {
                 TMapPoint point = tMapGpsManager.getLocation();
-                tMapView.setLocationPoint(point.getLongitude(),point.getLatitude());
+                //tMapView.setLocationPoint(point.getLongitude(),point.getLatitude());
                 publishProgress(point);
-
-
                 return String.valueOf(a);
-
-
-
             }
             return String.valueOf(a);
         }
@@ -122,6 +117,7 @@ public class NaviAsync extends Fragment {
         @Override
         protected void onProgressUpdate(TMapPoint... values) {
             super.onProgressUpdate(values);
+            tMapView.setLocationPoint(values[0].getLongitude(),values[0].getLatitude());
             TMapPoint tMapPointStart = new TMapPoint(37.570841, 126.985302); // SKT타워(출발지)
             try {
                 TMapPolyLine tMapPolyLine = new TMapData().findPathData(tMapPointStart, values[0]);

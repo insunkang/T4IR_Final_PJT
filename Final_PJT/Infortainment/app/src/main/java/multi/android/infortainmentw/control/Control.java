@@ -1,10 +1,17 @@
 package multi.android.infortainmentw.control;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +21,10 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+
+import com.skt.Tmap.TMapView;
 
 import java.io.PrintWriter;
 
@@ -24,6 +34,10 @@ import multi.android.infortainmentw.R;
 public class Control extends Fragment {
     PrintWriter pw;
     MainActivity ma;
+
+    double latitude;
+    double longitude;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +91,7 @@ public class Control extends Fragment {
                         ImageView iv = view.findViewById(R.id.aircontioner);
                         v1.dx = v1.cx + (int) (-110 * (Math.cos((progress) * 3.14 / 100d)));
                         v1.dy = v1.cy + (int) (110 * (Math.sin((-progress) * 3.14 / 100d)));
-                        iv.setColorFilter(Color.rgb ((int)(((progress)/100d)*255),0,(int)(((100-progress)/100d)*255)));
+                        iv.setColorFilter(Color.rgb((int) (((progress) / 100d) * 255), 0, (int) (((100 - progress) / 100d) * 255)));
                         v1.invalidate();
                         mHandler[1].sendEmptyMessageDelayed(10, 10);  //핸들러함수 콜 10은 식별번호, 지연시간 500밀리세컨드
                     }
@@ -93,7 +107,43 @@ public class Control extends Fragment {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double tempLatitude = latitude;
+                double tempLongitude = longitude;
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                double s = Math.acos(Math.cos(Math.toRadians(90 - tempLatitude)) * Math.cos(Math.toRadians(90 - latitude)) + Math.sin(Math.toRadians(90 - tempLatitude)) * Math.sin(Math.toRadians(90 - latitude)) * Math.cos(Math.toRadians(tempLongitude - longitude))) * 6378.137;
+                if (s * 3600 > 60000) {
 
+                } else {
+                    Log.d("logCheck1", (s * 3600) + "");
+
+                    Velocity v1 = view.findViewById(R.id.velocity);
+                    v1.dx = v1.cx + (int) (-110 * (Math.cos((s * 3600) * 3.14 / 100d)));
+                    v1.dy = v1.cy + (int) (110 * (Math.sin((-s * 3600) * 3.14 / 100d)));
+                    v1.invalidate();
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+            }
+        };
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+        }
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 250, 0, locationListener);
         return view;
     }
 }

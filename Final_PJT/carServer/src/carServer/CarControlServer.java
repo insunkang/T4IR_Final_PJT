@@ -12,7 +12,9 @@ public class CarControlServer {
 	static Socket tab;
 	static Socket car;
 	static Socket phone;
-
+	P2SReciverThread rt1 = null;
+	T2SReciverThread rt2 = null;
+	C2SReciverThread rt3 = null;
 
 	public void connect() {
 		try {
@@ -30,8 +32,14 @@ public class CarControlServer {
 						System.out.println("안드로이드접속대기");
 						phone = andserver.accept();
 						String ip = phone.getInetAddress().getHostAddress();
-						System.out.println(ip + "사용자접속!!\n");
-						P2SReciverThread rt1 = new P2SReciverThread(phone);
+						System.out.println(ip + "안드로이드접속!!");
+						if (rt1 != null) {
+							rt1.stop();
+							rt1.ioWork();
+							rt1 = null;
+							System.out.println("rt1중지");
+						}
+						rt1 = new P2SReciverThread(phone);
 						rt1.start();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -40,6 +48,7 @@ public class CarControlServer {
 			}
 		});
 		th1.start();
+
 		Thread th2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -48,8 +57,19 @@ public class CarControlServer {
 						System.out.println("태블릿접속대기");
 						tab = tabserver.accept();
 						String ip = tab.getInetAddress().getHostAddress();
-						System.out.println(ip + "사용자접속!!\n");
-						T2SReciverThread rt2 = new T2SReciverThread(tab);
+						System.out.println(ip + "태블릿접속!!");
+						if (rt2 != null) {
+							rt2.stop();
+							if (rt2 != null) {
+								rt2.ioWork();
+							}
+							if (rt3 != null) {
+								rt3.ioWork();
+							}
+							rt2 = null;
+							System.out.println("rt2중지");
+						}
+						rt2 = new T2SReciverThread(tab);
 						rt2.start();
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -66,9 +86,16 @@ public class CarControlServer {
 						System.out.println("차량접속대기");
 						car = carserver.accept();
 						String ip = car.getInetAddress().getHostAddress();
-						System.out.println(ip + "사용자접속!!\n");
-						C2SReciverThread rt3 = new C2SReciverThread(car);
+						System.out.println(ip + "차량접속!!");
+						if (rt3 != null) {
+							rt3.stop();
+							rt3.ioWork();
+							rt3 = null;
+							System.out.println("rt3중지");
+						}
+						rt3 = new C2SReciverThread(car);
 						rt3.start();
+
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -76,6 +103,7 @@ public class CarControlServer {
 			}
 		});
 		th3.start();
+
 	}
 
 	public static void main(String[] args) {

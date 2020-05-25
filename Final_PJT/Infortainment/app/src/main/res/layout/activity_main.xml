@@ -6,16 +6,16 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     >
-    <LinearLayout
+    <fragment
         android:id="@+id/navi_frag"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:name="multi.android.infortainmentw.navi.NaviFragment"
         android:layout_weight="1"
         android:orientation="vertical">
 
 
-    </LinearLayout>
+    </fragment>
 
     <LinearLayout
         android:layout_width="match_parent"
