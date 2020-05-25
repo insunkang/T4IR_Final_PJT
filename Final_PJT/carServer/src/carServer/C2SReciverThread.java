@@ -22,17 +22,20 @@ public class C2SReciverThread extends Thread {
 		} catch (IOException e) {
 		}
 	}
-
+	public void ioWork() {
+		pw2=null;
+	}
 	@Override
 	public void run() {
 		while (true) {
 			try {
+				/*
 				if(CarControlServer.phone!=null&&pw1==null) {
 					pw1 = new PrintWriter(CarControlServer.phone.getOutputStream(),true);
 				}
+				*/
 				if(CarControlServer.tab!=null&&pw2==null) {
 					pw2 = new PrintWriter(CarControlServer.tab.getOutputStream(),true);
-					System.out.println("pw2");
 				}
 				resMsg = in.readLine();
 				if (resMsg == null || resMsg.equals("") || resMsg.equals("\n")) {

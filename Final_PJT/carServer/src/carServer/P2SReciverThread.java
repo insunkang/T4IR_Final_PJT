@@ -6,11 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class P2SReciverThread extends Thread{
+public class P2SReciverThread extends Thread {
 	BufferedReader in;
 	String resMsg;
 	Socket client;
 	PrintWriter pw;
+
 	public P2SReciverThread(Socket client) {
 		this.client = client;
 		try {
@@ -19,18 +20,21 @@ public class P2SReciverThread extends Thread{
 		}
 	}
 
+	public void ioWork() {
+		pw=null;
+	}
+
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		while (true) {
 			try {
-				if(CarControlServer.tab!=null&&pw==null) {
-					pw = new PrintWriter(CarControlServer.car.getOutputStream(),true);
+				if (CarControlServer.tab != null && pw == null) {
+					pw = new PrintWriter(CarControlServer.car.getOutputStream(), true);
 				}
 				resMsg = in.readLine();
-				
-				System.out.println("클라이언트에서 보내온 메시지>>" + resMsg);
-				if(resMsg==null ||resMsg.equals("") || resMsg.equals("\n")) {
+
+				if (resMsg == null || resMsg.equals("") || resMsg.equals("\n")) {
 					continue;
 				}
 				System.out.println("클라이언트에서 보내온 메시지>>" + resMsg);

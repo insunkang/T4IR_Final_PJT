@@ -18,7 +18,9 @@ public class T2SReciverThread extends Thread{
 		} catch (IOException e) {
 		}
 	}
-
+	public void ioWork() {
+		pw=null;
+	}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
@@ -38,4 +40,5 @@ public class T2SReciverThread extends Thread{
 			}
 		}
 	}
+	
 }

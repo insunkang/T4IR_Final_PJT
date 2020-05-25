@@ -9,6 +9,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,19 +39,14 @@ public class NaviFragment extends Fragment {
     Context mContext = null;
     String apiKey = "l7xxfce37b4d926e4607a7d14ba4bba09475";
     TMapGpsManager tMapGpsManager = null;
-    //LocationManager locationManager = mContext;
-    private boolean m_bTrackingMode = true;
-
-    public NaviFragment() {
-
-    }
-
+    double latitude;
+    double longitude;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
 
-
+        //if 권한설정 else 기능실행
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -60,15 +57,16 @@ public class NaviFragment extends Fragment {
 
         } else {
             final NaviAsyncTask naviAsyncTask = new NaviAsyncTask();
-            final Button button;
-            Button btn;
+            final Button button; // 길찾기
+            Button btn; // 목적지설정
             View rootView = inflater.inflate(R.layout.fragment_navi, container, false);
             mapView = rootView.findViewById(R.id.map);
             tMapView = new TMapView(getActivity());
             tMapGpsManager = new TMapGpsManager(getActivity());
             tMapGpsManager.setMinTime(1000);
             tMapGpsManager.setMinDistance(1);
-            tMapGpsManager.setProvider(tMapGpsManager.NETWORK_PROVIDER);
+            //tMapGpsManager.setProvider(tMapGpsManager.NETWORK_PROVIDER);
+            tMapGpsManager.setProvider(tMapGpsManager.GPS_PROVIDER);
             tMapGpsManager.OpenGps();
             TMapPoint point = tMapGpsManager.getLocation();
             tMapView.setIconVisibility(true);
@@ -86,30 +84,35 @@ public class NaviFragment extends Fragment {
                 @Override
                 public void onLocationChanged(Location location) {
 
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
+                    double tempLatitude = latitude;
+                    double tempLongitude = longitude;
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+                    /*
+                    double s = Math.acos(Math.cos(Math.toRadians(90 - tempLatitude)) * Math.cos(Math.toRadians(90 - latitude)) + Math.sin(Math.toRadians(90 - tempLatitude)) * Math.sin(Math.toRadians(90 - latitude)) * Math.cos(Math.toRadians(tempLongitude - longitude))) * 6378.137;
+                    if (s * 3600 > 60000 || s==0.0) {
+
+                    } else {
+                        Log.d("logCheck1", (s * 3600) + "");
+                    }*/
                     tMapView.setLocationPoint(longitude, latitude);
-
-
+                    tMapView.setMapPosition(TMapView.POSITION_NAVI);
                 }
 
                 @Override
                 public void onStatusChanged(String provider, int status, Bundle extras) {
-
                 }
 
                 @Override
                 public void onProviderEnabled(String provider) {
-
                 }
 
                 @Override
                 public void onProviderDisabled(String provider) {
-
                 }
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-            // locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+            //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
 
             button = rootView.findViewById(R.id.road);
@@ -151,36 +154,39 @@ public class NaviFragment extends Fragment {
             int a = 0;
             Boolean isRunning = true;
             TMapData tMapData = new TMapData();
+
             while (isRunning) {
+                SystemClock.sleep(10000);
                 TMapPoint point = tMapGpsManager.getLocation();
-                TMapPoint tMapPointStart = new TMapPoint(37.570841, 126.985302); // SKT타워(출발지)
-
+                TMapPoint tMapPointEnd = new TMapPoint(37.570841, 126.985302); // SKT타워(출발지)
+                Log.d("check", "여기");
                 publishProgress(point);
-
                 try {
-
-                    TMapPolyLine tMapPolyLine = new TMapData().findPathData(tMapPointStart, point);
+                    TMapPolyLine tMapPolyLine = new TMapData().findPathData(tMapPointEnd, point);
                     tMapPolyLine.setLineColor(Color.BLUE);
                     tMapPolyLine.setLineWidth(2);
                     tMapView.addTMapPolyLine("Line1", tMapPolyLine);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-
+                //리턴은 한번만 경로호출을 한번만 실행할 때 활성화;
                 return String.valueOf(a);
             }
             return String.valueOf(a);
         }
+
         @Override
         protected void onProgressUpdate(TMapPoint... values) {
             super.onProgressUpdate(values);
 
         }
+
         @Override
         protected void onCancelled() {
             super.onCancelled();
         }
+
         @Override
         protected void onPostExecute(String string) {
             super.onPostExecute(string);
