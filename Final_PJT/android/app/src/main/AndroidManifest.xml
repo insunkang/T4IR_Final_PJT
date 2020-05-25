@@ -15,10 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".car.Car" />
-        <activity android:name=".MainActivity">
-
         <service
             android:name=".MyService3"
             android:enabled="true"
