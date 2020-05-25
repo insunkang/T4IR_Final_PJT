@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -13,12 +15,22 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".car.Car" />
-        <activity
-            android:name=".driving.Driving"
-            android:configChanges="screenSize|orientation" />
-        <activity android:name=".driving.Driving_Info" />
         <activity android:name=".MainActivity">
+
+        <service
+            android:name=".MyService3"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".MyService2"
+            android:enabled="true"
+            android:exported="true" />
+        <activity android:name=".driving.Driving"
+            android:configChanges="screenSize|orientation"/>
+        <!--왜안돼ㅐㅐ-->
+        <activity android:name=".driving.Driving_Info">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
