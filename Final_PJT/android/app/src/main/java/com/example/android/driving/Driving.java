@@ -178,7 +178,7 @@ public class Driving extends AppCompatActivity {
 
                 Log.d("msg",message);
                 //서버로 메시지 전송하기
-                pw.println(message);
+                if(message!="") pw.println(message);
                 pw.flush();
             }
         }).start();
@@ -190,7 +190,8 @@ public class Driving extends AppCompatActivity {
             try {
 
                 //socket = new Socket("70.12.228.112", 12345);
-                socket = new Socket("70.12.225.188", 33334);
+                //socket = new Socket("70.12.225.188", 33334);
+                socket = new Socket("70.12.224.117", 33334);
                 if (socket != null) {
                     ioWork();
                 }

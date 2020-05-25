@@ -13,10 +13,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".driving.Driving"
-            android:configChanges="screenSize|orientation"/>
-        <!--왜안돼ㅐㅐ-->
-        <activity android:name=".driving.Driving_Info">
+        <activity android:name=".car.Car" />
+        <activity
+            android:name=".driving.Driving"
+            android:configChanges="screenSize|orientation" />
+        <activity android:name=".driving.Driving_Info" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
