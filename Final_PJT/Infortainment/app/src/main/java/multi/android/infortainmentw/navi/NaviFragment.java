@@ -94,7 +94,7 @@ public class NaviFragment extends Fragment {
             tMapView.setSKTMapApiKey(apiKey);
             tMapView.setCompassMode(true);
             tMapView.setZoomLevel(15);
-            tMapView.setMapType(TMapView.MAPTYPE_HYBRID);  //일반지도
+            tMapView.setMapType(TMapView.MAPTYPE_STANDARD);  //일반지도
             tMapView.setLanguage(TMapView.LANGUAGE_KOREAN);
             tMapView.setTrackingMode(true);
             mContext = getContext();
@@ -103,7 +103,11 @@ public class NaviFragment extends Fragment {
             mAdapter = new ArrayAdapter<POI>(getActivity(), android.R.layout.simple_list_item_1);
             ArrayList<TMapPoint> alTMapPoint = new ArrayList<TMapPoint>();
             listView.setAdapter(mAdapter);
+
+
 //            StartPointListener startPointListener = new StartPointListener();
+//
+//
 //            listView.setOnItemClickListener(startPointListener);
 
             LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
@@ -122,8 +126,11 @@ public class NaviFragment extends Fragment {
                     } else {
                         Log.d("logCheck1", (s * 3600) + "");
                     }*/
-                    tMapView.setLocationPoint(longitude, latitude);
-                    tMapView.setMapPosition(TMapView.POSITION_NAVI);
+                    boolean isTracking = tMapView.getIsTracking();
+                    if (isTracking==true) {
+                        tMapView.setLocationPoint(longitude, latitude);
+                        tMapView.setMapPosition(TMapView.POSITION_DEFAULT);
+                    }
                 }
 
                 @Override
@@ -141,14 +148,7 @@ public class NaviFragment extends Fragment {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
             //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                    POI poi = (POI) listView.getItemAtPosition(position);
-                    tMapView.moveToZoomPosition(poi.item.getPOIPoint().getLatitude(), poi.item.getPOIPoint().getLongitude());
 
-                }
-            });
             tMapView.setOnCalloutRightButtonClickListener(new TMapView.OnCalloutRightButtonClickCallback() {
                 @Override
                 public void onCalloutRightButton(TMapMarkerItem tMapMarkerItem) {
@@ -168,10 +168,29 @@ public class NaviFragment extends Fragment {
                     searchPOI();
                 }
             });
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                    tMapView.setTrackingMode(false);
+
+                    POI poi = (POI) listView.getItemAtPosition(position);
+                    //tMapView.setLocationPoint(poi.item.getPOIPoint().getLatitude(), poi.item.getPOIPoint().getLongitude());
+//                    String a = String.valueOf(poi.item.getPOIPoint().getLatitude());
+//                    String b = String.valueOf(poi.item.getPOIPoint().getLongitude());
+                    
+                    tMapView.setCenterPoint(poi.item.getPOIPoint().getLongitude(),poi.item.getPOIPoint().getLatitude(),true);
+                    //tMapView.setCenterPoint(poi.item.getPOIPoint().getLatitude(), poi.item.getPOIPoint().getLongitude());
+                  return;
+
+                }
+            });
+
             btn = rootView.findViewById(R.id.road);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    tMapView.setTrackingMode(true);
                     if (start != null ) {
                         TMapPoint point = tMapGpsManager.getLocation();
                         searchRoute(point, start);
@@ -281,15 +300,16 @@ public class NaviFragment extends Fragment {
 
     }
 
-
+//
 //    class StartPointListener implements AdapterView.OnItemClickListener{
 //
 //        @Override
 //        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//            Toast.makeText(getContext(), "message", Toast.LENGTH_LONG).show();
 //            tMapView.removeAllMarkerItem();
 //            mAdapter.clear();
-//            addMarker(poi);
-//            mAdapter.add(new POI(poi));
+//           //addMarker(poi);
+//           // mAdapter.add(new POI(poi));
 //        }
 //
 //
