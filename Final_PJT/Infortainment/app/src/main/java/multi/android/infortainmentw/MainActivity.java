@@ -54,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
     PrintWriter pw;
     String ip = "70.12.224.117";
     int port = 33336;
-    // =================================
-    static SVT svt = new SVT();
-    // =================================
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
