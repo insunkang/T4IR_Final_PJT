@@ -20,17 +20,19 @@
         <activity android:name=".MainActivity">
 
         <service
-            android:name=".MyService3"
+            android:name=".security.MyService3"
             android:enabled="true"
             android:exported="true"></service>
         <service
-            android:name=".MyService2"
+            android:name=".security.MyService2"
             android:enabled="true"
             android:exported="true" />
+        <activity android:name=".driving.Driving_Info" />
+        <activity android:name=".security.PopupActivity" />
         <activity android:name=".driving.Driving"
             android:configChanges="screenSize|orientation"/>
         <!--왜안돼ㅐㅐ-->
-        <activity android:name=".driving.Driving_Info">
+        <activity android:name=".security.NotiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
