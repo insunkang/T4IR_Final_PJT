@@ -47,7 +47,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
-                android:text="목적지설정" />
+                android:text="목적지설정"
+                android:visibility="invisible" />
             <Button
                 android:id="@+id/road"
                 android:layout_width="wrap_content"
