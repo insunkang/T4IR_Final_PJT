@@ -15,28 +15,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".car.weatherTest"></activity>
         <activity android:name=".car.Car" />
+        <activity android:name=".driving.Driving_Info" />
+        <activity
+            android:name=".driving.Driving"
+            android:configChanges="screenSize|orientation" />
         <activity android:name=".MainActivity">
-
-        <service
-            android:name=".MyService3"
-            android:enabled="true"
-            android:exported="true"></service>
-        <service
-            android:name=".MyService2"
-            android:enabled="true"
-            android:exported="true" />
-        <activity android:name=".driving.Driving"
-            android:configChanges="screenSize|orientation"/>
-        <!--왜안돼ㅐㅐ-->
-        <activity android:name=".driving.Driving_Info">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".security.MyService3"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".security.MyService2"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

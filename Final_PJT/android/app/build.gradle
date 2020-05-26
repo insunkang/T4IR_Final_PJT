@@ -32,4 +32,11 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+
+    implementation 'com.github.androdocs:Simple-HTTP-Request:v1.0'
+
 }
