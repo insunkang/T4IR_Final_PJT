@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.StringTokenizer;
 
 
 public class MyService2 extends Service {
@@ -33,6 +34,7 @@ public class MyService2 extends Service {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
+    String androidId;
 
     public MyService2() {
     }
@@ -85,9 +87,12 @@ public class MyService2 extends Service {
             @Override
             public void run() {
                 try {
-                    socket = new Socket("70.12.228.82", 12345);
+                    androidId = "1111";
+                    socket = new Socket("70.12.116.58", 12345);
                     if (socket != null) {
                         ioWork();
+                        String message = "보냄~~~";
+                        pw.println("job/"+message+"/phone/"+androidId);
                     }
                     //서버에서 전달되는 메시지를 읽는 쓰레드
                     Thread t1 = new Thread(new Runnable() {
@@ -158,6 +163,8 @@ public class MyService2 extends Service {
 
             os = socket.getOutputStream();
             pw = new PrintWriter(os,true);
+            pw.println("phone/"+androidId);
+            pw.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }

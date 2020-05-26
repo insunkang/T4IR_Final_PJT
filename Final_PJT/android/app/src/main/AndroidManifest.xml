@@ -22,6 +22,20 @@
             android:name=".driving.Driving"
             android:configChanges="screenSize|orientation" />
         <activity android:name=".MainActivity">
+
+
+        <service
+            android:name=".security.MyService3"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".security.MyService2"
+            android:enabled="true"
+            android:exported="true" />
+        
+        <activity android:name=".security.PopupActivity" />
+        
+        <activity android:name=".security.NotiActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
