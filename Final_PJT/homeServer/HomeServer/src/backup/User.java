@@ -1,4 +1,4 @@
-package home;
+package backup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,13 +55,8 @@ public class User extends Thread {
 
 			nickname = br.readLine();
 			System.out.println("id:" + nickname);
-			// 여기에 클라이언트의 소켓객체를 car인지 phone인지 구분해서 저장합니다.
-			// 어떤 사용자인지 확인
 			String[] data = nickname.split("/");
-			category = data[0];// 차에서 접속하는 경우 car가 저장
-			// checklist는 반복 작업을 하지 않기 위해 만들어놓은 객체
-			// call by reference에 의해서 carlist와 checklist변수가
-			// carlist를 저장하는 hashmap을 공유
+			category = data[0];
 			if (category.equals("home")) {
 				checklist = homelist;
 			} else {
@@ -94,7 +89,73 @@ public class User extends Thread {
 			System.out.println("서버가 받은 클라이언트의 메시지:" + msg);
 			st = new StringTokenizer(msg, "/");
 			String protocol = st.nextToken();
-			if (protocol.equals("job")) {
+			
+			//조명 제어(and > 서버)
+			if (protocol.equals("led")) {
+				// 여기에서 클라이언트에게 메시지를 전달합니다.
+				String message = st.nextToken();
+				String category = st.nextToken();
+				String id = st.nextToken();
+				System.out.println(message + ":" + category + ":" + id);
+				// 서버에서 클라이언트의 메시지를 분석해서 메시지를 전달할 클라이언트를 정의
+				User userclient = null;
+				if (category.equals("phone")) {
+					userclient = homelist.get(id);
+				}
+				if (category.equals("home")) {
+					userclient = userlist.get(id);
+				}
+				if (userclient != null) {
+					userclient.sendMsg(message);
+				}
+			}
+			
+			//에어컨 제어(and > 서버)
+			if (protocol.equals("air")) {
+				// 여기에서 클라이언트에게 메시지를 전달합니다.
+				String message = st.nextToken();
+				String category = st.nextToken();
+				String id = st.nextToken();
+				System.out.println(message + ":" + category + ":" + id);
+				// 서버에서 클라이언트의 메시지를 분석해서 메시지를 전달할 클라이언트를 정의
+				User userclient = null;
+				if (category.equals("phone")) {
+					userclient = homelist.get(id);
+				}
+				if (category.equals("home")) {
+					userclient = userlist.get(id);
+				}
+				if (userclient != null) {
+					userclient.sendMsg(message);
+				}
+			}
+			
+			//온습도 제어(라떼 > 서버)
+			if (protocol.equals("pan")) {
+				// 여기에서 클라이언트에게 메시지를 전달합니다.
+				String message = st.nextToken();
+				try {
+					String category = st.nextToken();
+					String id = st.nextToken();
+					System.out.println(message + ":" + category + ":" + id);
+					// 서버에서 클라이언트의 메시지를 분석해서 메시지를 전달할 클라이언트를 정의
+					User userclient = null;
+					if (category.equals("phone")) {
+						userclient = homelist.get(id);
+					}
+					if (category.equals("home")) {
+						userclient = userlist.get(id);
+					}
+					if (userclient != null) {
+						userclient.sendMsg(message);
+					}
+				} catch(NoSuchElementException e) {
+					System.out.println("에러~~~~~~~~~~~~~");
+				}
+			}
+			
+			//경보 제어(라떼 > 서버)
+			if (protocol.equals("pirLed")) {
 				// 여기에서 클라이언트에게 메시지를 전달합니다.
 				String message = st.nextToken();
 				String category = st.nextToken();
@@ -117,16 +178,19 @@ public class User extends Thread {
 
 	public void sendMsg(String message) {
 		pw.println(message);
+		pw.flush();
 	}
 
 	public void run() {
 		while (true) {
 			try {
 				String msg = br.readLine();
-				System.out.println("nickname:"+nickname+"------------------------------------->"+msg);
-				//if (msg != null) {
-					filteringMsg(msg);
-				//}
+				if(msg != null) {
+					System.out.println("nickname:"+nickname+"------------------------------------->"+msg);
+					//if (msg != null) {
+						filteringMsg(msg);
+					//}
+				}
 			} catch (IOException e) {
 				System.out.println("클라이언트가 접속을 끊음");
 				try {
