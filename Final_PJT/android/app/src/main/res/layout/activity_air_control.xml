@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".home.light.LightControlActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="온도 설정"
+            android:textSize="12pt"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+            <TextView
+                android:id="@+id/A_text1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="현재 온도 : "
+                android:textSize="12pt" />
+            <TextView
+                android:id="@+id/A_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/A_text1"
+                android:width="75dip"
+                android:ems="10"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="12pt" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+            <TextView
+                android:id="@+id/A_text2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="현재 습도 : "
+                android:textSize="12pt" />
+            <TextView
+                android:id="@+id/A_humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/A_text2"
+                android:width="75dip"
+                android:ems="10"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="12pt" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+            <Button
+                android:id="@+id/btn_A_auto"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="send_msg"
+                android:text="자동모드"
+                android:layout_weight="5"/>
+            <TextView
+                android:id="@+id/A_text3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="설정 온도 값 :"
+                android:gravity="center_vertical|right"
+                android:layout_weight="1"/>
+            <Spinner
+                android:id="@+id/A_w_temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/A_text3"
+                android:ems="10"
+                android:gravity="center|left"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_margin="20dp">
+            <Button
+                android:id="@+id/btn_A_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="send_msg"
+                android:text="FAN켜기"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btn_A_off"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="send_msg"
+                android:text="FAN끄기"
+                android:layout_weight="1"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

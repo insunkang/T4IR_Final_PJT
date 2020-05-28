@@ -1,10 +1,12 @@
-package home;
+package trash;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Vector;
+
+import home.User;
 
 
 public class CarServer {

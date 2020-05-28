@@ -1,4 +1,4 @@
-package home;
+package backup;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -13,7 +13,7 @@ public class HomeServer {
 	HashMap<String,User> homelist = new HashMap<String,User>();	 
 	public void connect() {
 		try {
-			server = new ServerSocket(12345);
+			server = new ServerSocket(23335);
 			
 			
 		} catch (IOException e1) {

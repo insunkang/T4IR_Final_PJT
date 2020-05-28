@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".home.light.LightControlActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="0">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="거실 조명"
+            android:textSize="12pt"/>
+
+        <Button
+            android:id="@+id/btn_L_auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="send_msg"
+            android:text="자동" />
+
+        <Button
+            android:id="@+id/btn_L_manual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="send_msg"
+            android:text="수동" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+
+            <TextView
+                android:id="@+id/L_mTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="밝기 : "
+                android:textSize="12pt" />
+
+            <TextView
+                android:id="@+id/L_light_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/L_mTextView"
+                android:width="75dip"
+                android:ems="10"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="12pt" />
+
+            <SeekBar
+                android:id="@+id/L_seekBar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/L_light_number"
+                android:max="9"
+                android:progress="0" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="0">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="부엌 조명"
+            android:gravity="center"
+            android:textSize="12pt"/>
+        <Button
+            android:id="@+id/btn_K_auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="send_msg"
+            android:text="자동" />
+        <Button
+            android:id="@+id/btn_K_manual"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="send_msg"
+            android:text="수동" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp">
+            <TextView
+                android:id="@+id/K_mTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="밝기 : "
+                android:textSize="12pt" />
+            <TextView
+                android:id="@+id/K_light_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/K_mTextView"
+                android:width="75dip"
+                android:ems="10"
+                android:gravity="center"
+                android:text="0"
+                android:textSize="12pt" />
+            <SeekBar
+                android:id="@+id/K_seekBar"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/K_light_number"
+                android:max="9"
+                android:progress="0" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

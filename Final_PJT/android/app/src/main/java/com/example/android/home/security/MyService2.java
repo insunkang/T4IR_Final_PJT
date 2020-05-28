@@ -1,4 +1,4 @@
-package com.example.android.security;
+package com.example.android.home.security;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -15,6 +15,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 import com.example.android.R;
+import com.example.android.home.HomeControlActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +25,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.StringTokenizer;
 
 
 public class MyService2 extends Service {
@@ -34,7 +34,7 @@ public class MyService2 extends Service {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
-    String androidId;
+    String androidId = HomeControlActivity.androidId;
 
     public MyService2() {
     }
@@ -86,13 +86,14 @@ public class MyService2 extends Service {
         Thread t2 = new Thread((new Runnable() {
             @Override
             public void run() {
-                try {
-                    androidId = "1111";
-                    socket = new Socket("70.12.116.58", 12345);
+                //try {
+                    //androidId = "1111";
+                    //socket = new Socket("70.12.116.58", 12345);
+                    socket = HomeControlActivity.socket;
                     if (socket != null) {
                         ioWork();
                         String message = "보냄~~~";
-                        pw.println("job/"+message+"/phone/"+androidId);
+                        pw.println("pirLed/"+message+"/phone/"+androidId);
                     }
                     //서버에서 전달되는 메시지를 읽는 쓰레드
                     Thread t1 = new Thread(new Runnable() {
@@ -144,11 +145,11 @@ public class MyService2 extends Service {
                         }
                     });
                     t1.start();
-                } catch (UnknownHostException e) {
+                /*} catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         }));
         t2.start();
@@ -164,8 +165,8 @@ public class MyService2 extends Service {
 
             os = socket.getOutputStream();
             pw = new PrintWriter(os,true);
-            pw.println("phone/"+androidId);
-            pw.flush();
+            //pw.println("phone/"+androidId);
+            //pw.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,7 +176,15 @@ public class MyService2 extends Service {
     @Override
     public void onDestroy() {
         Log.e("myservice","MyService onDestroy");
-
-
+        try {
+            is.close();
+            isr.close();
+            br.close();
+            os.close();
+            pw.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
