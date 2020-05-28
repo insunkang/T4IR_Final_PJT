@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     InputStreamReader isr;
     BufferedReader br;
     OutputStream os;
-    PrintWriter pw;
-    String ip = "70.12.227.93";
+    public static PrintWriter pw;
+    String ip = "70.12.224.117";
     int port = 33336;
 
     String andId;
@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             new AsyncTask<String, String, String>() {
-                String temporature = "";
+                String temperature = "";
                 String humidity = "";
 
                 @Override
@@ -237,12 +237,12 @@ public class MainActivity extends AppCompatActivity {
                         String protocol = token.nextToken();
                         String message = token.nextToken();
                         System.out.println("프로토콜:" + protocol + ",메시지:" + message);
-                        if (protocol.equals("temporature")) {
-                            temporature = message;
-                            publishProgress(message);
+                        if (protocol.equals("temperature")) {
+                            temperature = message;
+                            control.setTemperature(message);
                         } else if (protocol.equals("humidity")) {
                             humidity = message;
-                            publishProgress(message);
+                            control.setHumidity(message);
                         }
                     } catch (NoSuchElementException e) {
 
@@ -251,10 +251,6 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 protected void onProgressUpdate(String... values) {
-                    TextView tvTemp = findViewById(R.id.temporature);
-                    TextView tvHumi = findViewById(R.id.humidity);
-                    tvTemp.setText(temporature + "℃");
-                    tvHumi.setText(humidity + "％");
                 }
             }.execute();
 
@@ -266,89 +262,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-    public void left_btn(View v) {
-        final ImageView iv = findViewById(R.id.rew);
-        new AsyncTask<String, String, String>() {
-
-            @Override
-            protected String doInBackground(String... strings) {
-                for (int i = 0; i < 5; i++) {
-                    publishProgress();
-                    SystemClock.sleep(600);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onProgressUpdate(String... values) {
-                if (iv.getVisibility() == View.INVISIBLE) {
-                    iv.setVisibility(View.VISIBLE);
-                } else {
-                    iv.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                iv.setVisibility(View.INVISIBLE);
-            }
-        }.execute();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                pw.println("leftLight");
-            }
-        });
-        thread.start();
+    public void resetKm(View v){
+        control.setKm(0);
     }
 
-    public void right_btn(View v) {
-
-        final ImageView iv = findViewById(R.id.ff);
-        new AsyncTask<String, String, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-                for (int i = 0; i < 5; i++) {
-                    publishProgress();
-                    SystemClock.sleep(600);
-                }
-                return null;
-            }
-
-            @Override
-            protected void onProgressUpdate(String... values) {
-                if (iv.getVisibility() == View.INVISIBLE) {
-                    iv.setVisibility(View.VISIBLE);
-                    Log.d("test","check");
-                } else {
-                    iv.setVisibility(View.INVISIBLE);
-                }
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                iv.setVisibility(View.INVISIBLE);
-            }
-        }.execute();
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                pw.println("rightLight");
-            }
-        });
-        thread.start();
-    }
-
-    public void emergency_btn(View v) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                pw.println("emergency");
-            }
-        });
-        thread.start();
-    }
 
     public void replaceFragmentFindAddress() {
         FragmentManager fragmentManager = getSupportFragmentManager();
