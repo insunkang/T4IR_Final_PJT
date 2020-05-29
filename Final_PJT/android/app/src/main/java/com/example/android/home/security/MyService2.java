@@ -15,6 +15,7 @@ import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
 
+
 import com.example.android.Iowork;
 import com.example.android.R;
 import com.example.android.home.HomeControlActivity;
@@ -33,6 +34,7 @@ public class MyService2 extends Service {
     InputStream is;
     InputStreamReader isr;
     BufferedReader br;
+
     //Socket socket;
     OutputStream os;
     PrintWriter pw;
@@ -40,6 +42,7 @@ public class MyService2 extends Service {
     public static Socket socket;
     public static Iowork iowork;
     public static String androidId;
+
 
     public MyService2() {
     }
@@ -91,6 +94,7 @@ public class MyService2 extends Service {
         Thread t2 = new Thread((new Runnable() {
             @Override
             public void run() {
+
                 try {
                     if (socket == null){
                         androidId = "1111";
@@ -110,6 +114,7 @@ public class MyService2 extends Service {
                         //pw.println("phone/"+androidId);
                         //String message = "보냄~~~";
                         //pw.println("pirLed/"+message+"/phone/"+androidId);
+
                     }
                     //서버에서 전달되는 메시지를 읽는 쓰레드
                     Thread t1 = new Thread(new Runnable() {
@@ -161,11 +166,13 @@ public class MyService2 extends Service {
                         }
                     });
                     t1.start();
+
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
         }));
         t2.start();
@@ -182,6 +189,7 @@ public class MyService2 extends Service {
             os = socket.getOutputStream();
             pw = new PrintWriter(os,true);
             pw.println("phone/"+androidId);
+
             //pw.flush();
         } catch (IOException e) {
             e.printStackTrace();

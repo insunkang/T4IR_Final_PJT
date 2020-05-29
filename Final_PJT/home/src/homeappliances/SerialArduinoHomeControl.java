@@ -30,9 +30,9 @@ public class SerialArduinoHomeControl {
 		try {
 			CommPortIdentifier commPortIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 			if (commPortIdentifier.isCurrentlyOwned()) {
-				System.out.println("Æ÷Æ® »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
+				System.out.println("í¬íŠ¸ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 			} else {
-				System.out.println("Æ÷Æ® »ç¿ë°¡´É.");
+				System.out.println("í¬íŠ¸ ì‚¬ìš©ê°€ëŠ¥.");
 				try {
 					CommPort commPort = commPortIdentifier.open("basic_serial", 5000);
 					if (commPort instanceof SerialPort) {
@@ -55,7 +55,7 @@ public class SerialArduinoHomeControl {
 						} catch (IOException e) {
 						}
 					} else {
-						System.out.println("SerialPort¸¸ ÀÛ¾÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.");
+						System.out.println("SerialPortë§Œ ì‘ì—…í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
 					}
 				} catch (PortInUseException e) {
 					e.printStackTrace();
@@ -88,7 +88,7 @@ public class SerialArduinoHomeControl {
 								toggle = "on";
 							}
 						}
-						System.out.println("Å¬¶óÀÌ¾ğÆ®¿¡°Ô ¹ŞÀº ¸Ş½ÃÁö:" + msg);
+						System.out.println("í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë°›ì€ ë©”ì‹œì§€:" + msg);
 						if (toggle.equals("off")) {
 							os.write('9');
 						} else if (toggle.equals("on")) {

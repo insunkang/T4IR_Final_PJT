@@ -26,7 +26,9 @@
         <activity
             android:name=".driving.Driving"
             android:configChanges="screenSize|orientation" />
+
         <activity android:name=".home.security.NotiActivity" />
+
 
 
         <service
@@ -39,6 +41,7 @@
             android:exported="true" />
         
         <activity android:name=".home.security.PopupActivity" android:theme="@android:style/Theme.Dialog" />
+
         
         <activity android:name=".MainActivity">
             <intent-filter>

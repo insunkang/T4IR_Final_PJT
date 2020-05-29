@@ -104,7 +104,8 @@ public class MyService2 extends Service {
                                     msg = br.readLine();
                                     Log.d("chat", "서버로 부터 수신된 메시지>>"
                                             + msg);
-                                    if (msg.equals("on")){
+                                    String[] message = msg.split(",");
+                                    if (message[0].equals("on")){
                                         NotificationCompat.Builder builder = new NotificationCompat.Builder(MyService2.this, "default");
 
                                         builder.setSmallIcon(R.drawable.ic_aa);
