@@ -7,12 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Random;
 
 import homeappliances.ReceiverThread;
 import homeappliances.SerialArduinoHomeControl;
 import homeappliances.Variable;
-import pir.ArduinoSerialReadUsingEvent;
 
 public class HomeClient {
     InputStream is;
@@ -22,11 +20,7 @@ public class HomeClient {
     OutputStream os;
     PrintWriter pw;
     String homeId;
-    
-    ArduinoSerialReadUsingEvent serialObj;
-    BufferedReader hbr;
-	PrintWriter hpw;
-	OutputStream hos;
+    SerialArduinoHomeControl serialObj;
     
 	public HomeClient() {
 		connect();
@@ -35,14 +29,14 @@ public class HomeClient {
 	public void connect() {
 		try {
 			socket = new Socket(Variable.ip, Variable.port);
-			System.out.println("Á¢¼Ó¼º°ø...");
+			System.out.println("ì ‘ì†ì„±ê³µ...");
 	        if (socket != null) {
-	        	System.out.println("³ÎÀÌ¾Æ´Ï´Ù.");
-	        	//Á¢¼ÓÇÑ ÈÄ¿¡ Å¬¶óÀÌ¾ğÆ®ÀÇ ¾ÆÀÌµğ¸¦ »ı¼ºÇÕ´Ï´Ù.
+	        	System.out.println("ë„ì´ì•„ë‹ˆë‹¤.");
+	        	//ì ‘ì†í•œ í›„ì— í´ë¼ì´ì–¸íŠ¸ì˜ ì•„ì´ë””ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	        	homeId = "1111";
 	            ioWork();
-	            new ReceiverThread(hos,hbr).start();
-	            new ArduinoSerialReadUsingEvent(socket, homeId, hpw);
+	            
+	            //new ArduinoSerialReadUsingEvent(socket, homeId, hpw);
 	        }
 		} catch (IOException e2) {
 			e2.printStackTrace();
@@ -57,12 +51,11 @@ public class HomeClient {
 	        os = socket.getOutputStream();
 	        pw = new PrintWriter(os,true);
 	        //
-	        hbr = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			hpw = new PrintWriter(socket.getOutputStream(), true);
-			serialObj = new ArduinoSerialReadUsingEvent(socket, homeId, hpw);
-			hos = serialObj.getOutput();
-	        //
-	        //¿©±â¼­ Å¬¶óÀÌ¾ğÆ®ÀÇ ¾ÆÀÌµğ¸¦ ¼­¹ö¿¡°Ô Àü¼ÛÇÕ´Ï´Ù.
+			serialObj = new SerialArduinoHomeControl(pw);
+	        serialObj.connect(Variable.Serialport);
+	        new ReceiverThread(serialObj.getOutput(), br).start();
+
+	        //ì—¬ê¸°ì„œ í´ë¼ì´ì–¸íŠ¸ì˜ ì•„ì´ë””ë¥¼ ì„œë²„ì—ê²Œ ì „ì†¡í•©ë‹ˆë‹¤.
 	        pw.println("home/"+homeId);
             pw.flush();
 	    } catch (IOException e) {

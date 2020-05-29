@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -76,33 +78,41 @@ public class HomeControlActivity extends AppCompatActivity {
             }
         });
 
-        new AsyncTask<String, String, String>() {
+        /*new AsyncTask<String, String, String>() {
 
             @Override
             protected String doInBackground(String... strings) {
                 try {
-                    androidId = "1111";
+                    //androidId = "1111";
                     socket = new Socket("70.12.116.58", 23335);
-                    is = socket.getInputStream();
+                    ioWork();
+                    *//*is = socket.getInputStream();
                     isr = new InputStreamReader(is);
                     br = new BufferedReader(isr);
                     os = socket.getOutputStream();
                     pw = new PrintWriter(os, true);
                     iowork = new Iowork(is, isr, br, os, pw);
-                    pw.println("phone/"+androidId);
+                    pw.println("phone/"+androidId);*//*
                     Log.d("check1","소켓통신시작");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 return null;
             }
-        }.execute();
+        }.execute();*/
 
     }
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
-
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                pw.println("close");
+                Log.e("myservice","close전송");
+            }
+        }).start();
+        SystemClock.sleep(300);
        try {
            // 자원반납
             is.close();
@@ -117,4 +127,20 @@ public class HomeControlActivity extends AppCompatActivity {
         }
 
     }
+    void ioWork(){
+
+        try {
+            is = socket.getInputStream();
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+
+            os = socket.getOutputStream();
+            pw = new PrintWriter(os,true);
+            pw.println("phone/"+androidId);
+            //pw.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }*/
 }

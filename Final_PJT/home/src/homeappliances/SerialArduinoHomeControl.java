@@ -1,12 +1,13 @@
 package homeappliances;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Scanner;
 import java.util.TooManyListenersException;
 
-import homeappliances.HomeSerialListener;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -18,7 +19,6 @@ public class SerialArduinoHomeControl {
 	OutputStream os;
 	InputStream is;
 	PrintWriter pw;
-
 	public SerialArduinoHomeControl() {
 	}
 
@@ -30,9 +30,9 @@ public class SerialArduinoHomeControl {
 		try {
 			CommPortIdentifier commPortIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 			if (commPortIdentifier.isCurrentlyOwned()) {
-				System.out.println("Æ÷Æ® »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
+				System.out.println("í¬íŠ¸ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
 			} else {
-				System.out.println("Æ÷Æ® »ç¿ë°¡´É.");
+				System.out.println("í¬íŠ¸ ì‚¬ìš©ê°€ëŠ¥.");
 				try {
 					CommPort commPort = commPortIdentifier.open("basic_serial", 5000);
 					if (commPort instanceof SerialPort) {
@@ -41,19 +41,21 @@ public class SerialArduinoHomeControl {
 						try {
 							serialPort.setSerialPortParams(9600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
 									SerialPort.PARITY_NONE);
+							RfidControl(serialPort);
+							InputStream in = serialPort.getInputStream();
 							is = serialPort.getInputStream();
 							os = serialPort.getOutputStream();
-							/*try {
-								serialPort.addEventListener(new HomeSerialListener(is, pw));
+							try {
+								serialPort.addEventListener(new HomeSerialListener(is, pw, "1111"));
 								serialPort.notifyOnDataAvailable(true);
 							} catch (TooManyListenersException e) {
-							}*/
+							}
 						} catch (UnsupportedCommOperationException e) {
 							e.printStackTrace();
 						} catch (IOException e) {
 						}
 					} else {
-						System.out.println("SerialPort¸¸ ÀÛ¾÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.");
+						System.out.println("SerialPortë§Œ ì‘ì—…í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
 					}
 				} catch (PortInUseException e) {
 					e.printStackTrace();
@@ -64,6 +66,41 @@ public class SerialArduinoHomeControl {
 		} finally {
 
 		}
+	}
+
+	public void RfidControl(SerialPort serialPort) {
+		PrintWriter pr;
+		Scanner key = new Scanner(System.in);
+		
+
+		Thread t1 = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				String toggle = "on";
+				while (true) {
+					try {
+						String msg = key.next();
+						if (msg.equals("0005276273")) {
+							if (toggle.equals("on")) {
+								toggle = "off";
+							} else if (toggle.equals("off")) {
+								toggle = "on";
+							}
+						}
+						System.out.println("í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë°›ì€ ë©”ì‹œì§€:" + msg);
+						if (toggle.equals("off")) {
+							os.write('9');
+						} else if (toggle.equals("on")) {
+							os.write('8');
+						}
+					} catch (IOException e) {
+						System.out.println(e);
+					}
+				}
+			}
+		});
+		t1.start();
 	}
 
 	public OutputStream getOutput() {

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.R;
 import com.example.android.home.HomeControlActivity;
+import com.example.android.home.security.MyService2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class AirControlActivity extends AppCompatActivity {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
-    String androidId = HomeControlActivity.androidId;
+    String androidId = MyService2.androidId;
     Thread t1;
     private Spinner T_spinner;
     ArrayList<Integer> arrayList;
@@ -110,7 +111,7 @@ public class AirControlActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Integer... integers) {
 
-            socket = HomeControlActivity.socket;
+            socket = MyService2.socket;
             if (socket != null) {
                 ioWork();
             }
@@ -138,13 +139,16 @@ public class AirControlActivity extends AppCompatActivity {
             return "";
         }
 
-        void ioWork() {
-            is = HomeControlActivity.iowork.getIs();
-            isr = HomeControlActivity.iowork.getIsr();
-            br = HomeControlActivity.iowork.getBr();
-            os = HomeControlActivity.iowork.getOs();
-            pw = HomeControlActivity.iowork.getPw();
-            //pw.println("phone/" + androidId);
+        void ioWork(){
+            is = MyService2.iowork.getIs();
+            isr = MyService2.iowork.getIsr();
+            br = MyService2.iowork.getBr();
+
+            os = MyService2.iowork.getOs();
+            pw = MyService2.iowork.getPw();
+            //pw.println("phone/"+androidId);
+            //pw.flush();
+
         }
 
         private void filteringMsg(String msg) {
@@ -174,7 +178,7 @@ public class AirControlActivity extends AppCompatActivity {
 
     }
 
-    @Override
+    /*@Override
     protected void onDestroy() {
         super.onDestroy();
         try {
@@ -189,5 +193,5 @@ public class AirControlActivity extends AppCompatActivity {
         }
         t1.interrupt();
         Log.d("check1", Thread.activeCount() + "");
-    }
+    }*/
 }

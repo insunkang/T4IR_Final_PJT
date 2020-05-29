@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.R;
 import com.example.android.home.HomeControlActivity;
+import com.example.android.home.security.MyService2;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,7 +35,7 @@ public class LightControlActivity extends AppCompatActivity {
     SeekBar K_seekBar;
     TextView L_txtValue;
     TextView K_txtValue;
-    String androidId = HomeControlActivity.androidId;
+    String androidId = MyService2.androidId;
     Thread t1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,7 +132,7 @@ public class LightControlActivity extends AppCompatActivity {
         protected String doInBackground(Integer... integers) {
 
             //androidId = "1111";
-            socket = HomeControlActivity.socket;
+            socket = MyService2.socket;
             //socket = new Socket("70.12.116.75", 12345);
             if (socket != null) {
                 ioWork();
@@ -155,19 +156,22 @@ public class LightControlActivity extends AppCompatActivity {
             return "";
         }
 
-        void ioWork() {
-            is = HomeControlActivity.iowork.getIs();
-            isr = HomeControlActivity.iowork.getIsr();
-            br = HomeControlActivity.iowork.getBr();
-            os = HomeControlActivity.iowork.getOs();
-            pw = HomeControlActivity.iowork.getPw();
-            //pw.println("phone/" + androidId);
+        void ioWork(){
+            is = MyService2.iowork.getIs();
+            isr = MyService2.iowork.getIsr();
+            br = MyService2.iowork.getBr();
+
+            os = MyService2.iowork.getOs();
+            pw = MyService2.iowork.getPw();
+            //pw.println("phone/"+androidId);
+            //pw.flush();
+
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        t1.interrupt();
+        //t1.interrupt();
     }
 }

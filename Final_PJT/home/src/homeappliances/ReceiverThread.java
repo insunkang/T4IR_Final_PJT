@@ -2,10 +2,7 @@ package homeappliances;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class ReceiverThread extends Thread {
 	BufferedReader br;
@@ -20,26 +17,26 @@ public class ReceiverThread extends Thread {
 		while (true) {
 			try {
 				String msg = br.readLine();
-				System.out.println("Å¬¶óÀÌ¾ğÆ®°¡ º¸³½ ¸Ş½ÃÁö:" + msg);
+				System.out.println("í´ë¼ì´ì–¸íŠ¸ê°€ ë³´ë‚¸ ë©”ì‹œì§€:" + msg);
 				if (msg.equals("L_auto")) {
 					os.write('0');
 				} else if (msg.equals("L_manual")) {
 					os.write('1');
 					char L_temp = br.readLine().charAt(0);
-					System.out.println("L_manul°ª: " + L_temp);
+					System.out.println("L_manulê°’: " + L_temp);
 					os.write(L_temp);
 				} else if (msg.equals("K_auto")) {
 					os.write('2');
 				} else if (msg.equals("K_manual")) {
 					os.write('3');
 					char K_temp = br.readLine().charAt(0);
-					System.out.println("K_manul°ª: " + K_temp);
+					System.out.println("K_manulê°’: " + K_temp);
 					os.write(K_temp);
 
 				} else if (msg.equals("FAN_auto")) {
 					os.write('4');
 					String A_auto = (br.readLine());
-					System.out.println("¼³Á¤ ¿Âµµ °ª: " + A_auto);
+					System.out.println("ì„¤ì • ì˜¨ë„ ê°’: " + A_auto);
 					os.write(A_auto.getBytes());
 				} else if (msg.equals("FAN_on")) {
 					os.write('5');
@@ -47,7 +44,14 @@ public class ReceiverThread extends Thread {
 					os.write('6');
 				}
 			} catch (IOException e) {
-				System.out.println("¼­¹ö°¡ Á¢¼ÓÀ» ²÷À½");
+				System.out.println("ì„œë²„ê°€ ì ‘ì†ì„ ëŠìŒ");
+				try {
+					br.close();
+					os.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
 			}
 
 		}
