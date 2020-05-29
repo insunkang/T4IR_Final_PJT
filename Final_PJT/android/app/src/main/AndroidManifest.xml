@@ -15,27 +15,32 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+
         <activity android:name=".car.weatherTest"></activity>
+        <activity android:name=".home.HomeControlActivity"></activity>
+        <activity android:name=".home.air.AirControlActivity"></activity>
+        <activity android:name=".home.gas.GasControlActivity"></activity>
+        <activity android:name=".home.light.LightControlActivity"></activity>
         <activity android:name=".car.Car" />
         <activity android:name=".driving.Driving_Info" />
         <activity
             android:name=".driving.Driving"
             android:configChanges="screenSize|orientation" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".home.security.NotiActivity" />
 
 
         <service
-            android:name=".security.MyService3"
+            android:name=".home.security.MyService3"
             android:enabled="true"
             android:exported="true"></service>
         <service
-            android:name=".security.MyService2"
+            android:name=".home.security.MyService2"
             android:enabled="true"
             android:exported="true" />
         
-        <activity android:name=".security.PopupActivity" />
+        <activity android:name=".home.security.PopupActivity" android:theme="@android:style/Theme.Dialog" />
         
-        <activity android:name=".security.NotiActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,11 +49,11 @@
         </activity>
 
         <service
-            android:name=".security.MyService3"
+            android:name=".home.security.MyService3"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".security.MyService2"
+            android:name=".home.security.MyService2"
             android:enabled="true"
             android:exported="true" />
     </application>

@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.car.Car;
+import com.example.android.home.HomeControlActivity;
 
 public class MainActivity extends AppCompatActivity {
     ImageButton main_home_img;
@@ -27,6 +28,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Car.class);
+                startActivity(intent);
+            }
+        });
+
+        main_home_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),HomeControlActivity.class);
                 startActivity(intent);
             }
         });
