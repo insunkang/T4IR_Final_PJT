@@ -5,11 +5,10 @@
 
 <configuration>
 	<typeAliases>
-		
-		
+		<typeAlias type="fin.prj.miri.member.MemberVO" alias="member"/>
 	</typeAliases>
 	<mappers>
-		
+		<mapper resource="mapper/member.xml"/>
 	</mappers>
 </configuration>
 

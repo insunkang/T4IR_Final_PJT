@@ -6,62 +6,114 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <LinearLayout
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="casual"
+            android:text="WELCOME MIRI"
+            android:textSize="29dp" />
+    </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:fontFamily="monospace"
-        android:gravity="center"
-        android:text="MIRI에 오신것을 환영합니다"
-        android:textSize="32dp" />
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="3">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_weight="1">
-            <ImageButton
-                android:id="@+id/main_car_img"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"/>
-
-            <TextView
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/main_car_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="car"
+                    android:textSize="40dp" />
+            </LinearLayout>
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:gravity="center"
-                android:text="car"
-                android:textSize="30dp" />
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <ImageButton
+                    android:id="@+id/main_home_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:scaleType="fitXY"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="casual"
+                    android:gravity="center"
+                    android:text="home"
+                    android:textSize="40dp" />
+            </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/loginlayout"
             android:orientation="vertical"
-            android:layout_weight="1">
-            <ImageButton
-                android:id="@+id/main_home_img"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                android:layout_marginRight="4dp"
-                android:layout_weight="1"/>
+            android:layout_width="350dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:layout_gravity="center">
 
-            <TextView
+            <EditText
+                android:id="@+id/login_id"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="monospace"
-                android:gravity="center"
-                android:text="home"
-                android:textSize="30dp" />
+                android:layout_height="40dp"
+                android:hint="id:"
+                android:textSize="19dp"/>
+            <EditText
+                android:id="@+id/login_pass"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="password:"
+                android:textSize="19dp"/>
+            <Button
+                android:id="@+id/login_submit"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="로그인"
+                android:textSize="21dp"
+                android:textColor="@color/white"
+                android:background="@color/mBlack"/>
+            <Button
+                android:layout_marginTop="1dp"
+                android:id="@+id/login_register"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="회원가입"
+                android:textSize="21dp"
+                android:textColor="@color/white"
+                android:background="@color/mBlack"/>
         </LinearLayout>
+
     </LinearLayout>
+
+
 
 </LinearLayout>

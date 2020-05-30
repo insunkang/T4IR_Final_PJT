@@ -1,24 +1,29 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
 
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge"> -->
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Login</title>
+  <title>MIRI</title>
 
   <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/miri/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
   <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="/miri/static/css/sb-admin-2.min.css" rel="stylesheet">
+
+
+<script type="text/javascript">
+	
+</script>
 
 </head>
 
@@ -39,39 +44,52 @@
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                    <h1 class="h4 text-gray-900 mb-4">MIRI에 오신 것을 환영합니다</h1>
                   </div>
-                  <form class="user">
+                  <form class="user" action="/miri/index.do" method="post">
                     <div class="form-group">
-                      <input type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                      <input type="text" class="form-control form-control-user" name="family_id" id="inputAdminId" aria-describedby="emailHelp" placeholder="Enter Id...">
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
+                      <input type="password" class="form-control form-control-user" name="family_pass" id="inputAdminPassword" placeholder="Password">
                     </div>
-                    <div class="form-group">
-                      <div class="custom-control custom-checkbox small">
-                        <input type="checkbox" class="custom-control-input" id="customCheck">
-                        <label class="custom-control-label" for="customCheck">Remember Me</label>
-                      </div>
-                    </div>
-                    <a href="index.html" class="btn btn-primary btn-user btn-block">
+                    <button type="submit" class="btn btn-primary btn-user btn-block" style="">Login</button>
+	                <div class="text-center">
+	                    <a class="small" href="register.do">Create an Account!</a>
+	                </div>
+                    <!-- <a href="/miri/index.do" class="btn btn-primary btn-user btn-block">
                       Login
-                    </a>
+                    </a> -->
                     <hr>
-                    <a href="index.html" class="btn btn-google btn-user btn-block">
+                    <!-- <a href="index.html" class="btn btn-google btn-user btn-block">
                       <i class="fab fa-google fa-fw"></i> Login with Google
                     </a>
                     <a href="index.html" class="btn btn-facebook btn-user btn-block">
                       <i class="fab fa-facebook-f fa-fw"></i> Login with Facebook
-                    </a>
+                    </a> -->
                   </form>
                   <hr>
+                  <div style="background-image: 'url(car_insurance)'">
+                  
+                  </div>
+                  
                   <div class="text-center">
+					<img src="/static/img/car_insurance.jpg">
+				  </div>
+                  
+                  <div class="text-center">
+                	<a class="large">보험사에선 안 알려주는 자동차 보험 가입팁 4가지</a>
+              	  </div>
+              	  <div class="text-center">
+                	<a class="small">차를 소유한 사람이라면 반드시 가입해야 하는 자동차 보험. 여러분은 어떻게 가입하고 계신가요? 혹시 보험사에서 처음 보여주는 담보와 가입금액 그대로 가입하시진 않으셨나요?</a>
+              	  </div>
+              	  
+                  <!-- <div class="text-center">
                     <a class="small" href="forgot-password.html">Forgot Password?</a>
                   </div>
                   <div class="text-center">
                     <a class="small" href="register.html">Create an Account!</a>
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -85,14 +103,16 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/miri/static/vendor/jquery/jquery.min.js?v=<%=System.currentTimeMillis() %>"></script>
+  <script src="/miri/static/vendor/bootstrap/js/bootstrap.bundle.min.js?v=<%=System.currentTimeMillis() %>"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/miri/static/vendor/jquery-easing/jquery.easing.min.js?v=<%=System.currentTimeMillis() %>"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+  <script src="js/sb-admin-2.min.js?v=<%=System.currentTimeMillis() %>"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 </body>
 
