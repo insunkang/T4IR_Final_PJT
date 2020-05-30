@@ -35,6 +35,22 @@
                 android:layout_height="wrap_content"
                 android:text="Search"
                 android:id="@+id/btn_search" />
+            <Button
+                android:id="@+id/justforNavi"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+            <TextView
+                android:id="@+id/a"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+            <TextView
+                android:id="@+id/b"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
+            <Button
+                android:id="@+id/sendGPS"
+                android:layout_width="0dp"
+                android:layout_height="0dp"/>
         </LinearLayout>
 
         <LinearLayout

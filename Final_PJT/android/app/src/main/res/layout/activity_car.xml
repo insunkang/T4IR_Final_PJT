@@ -13,21 +13,15 @@
     app:umanoShadowHeight="5dp"
     tools:context=".car.Car">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="인선이 지도 작업"
-            android:textColor="@color/mBlack"
-            android:textSize="30dp" />
-    </LinearLayout>
+        <fragment
+            android:id="@+id/car_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.example.android.car.carMap"
+            />
+
+
 
     <LinearLayout
         android:id="@+id/frameLayout"
