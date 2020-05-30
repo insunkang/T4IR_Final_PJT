@@ -1,21 +1,15 @@
-package home;
+package pir;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Vector;
-
-
-public class HomeServer {
-	private ServerSocket server;
-	HashMap<String,User> userlist = new HashMap<String,User>();	 
-	HashMap<String,User> homelist = new HashMap<String,User>();	 
+//¾Èµå·ÎÀÌµå(Å¬¶óÀÌ¾ğÆ®)ÀÇ ¿äÃ»À» ¹ŞÀ¸¸é Â÷ ¾È¿¡¼­ ÀåÄ¡¿Í Åë½ÅÇÏ´Â
+//½Ã¸®¾óÅë½Å°´Ã¼ ÂÊÀ¸·Î ¿äÃ»À» Àü´ŞÇÏ´Â ¼­¹ö
+public class AndroidPIRControlServer {
+	private ServerSocket server;	
 	public void connect() {
 		try {
 			server = new ServerSocket(12345);
-			
-			
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
@@ -26,11 +20,8 @@ public class HomeServer {
 					try {
 						Socket client = server.accept();
 						String ip = client.getInetAddress().getHostAddress();
-						System.out.println(ip+"ì ‘ì†!!\\n");
-						User user = new User(client, userlist,homelist);
-					
-						user.start();
-						
+						System.out.println(ip+"»ç¿ëÀÚÁ¢¼Ó!!\n");
+						//new ArduinoSerialReadUsingEvent(client).main();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -40,6 +31,7 @@ public class HomeServer {
 		th.start();
 	}
 	public static void main(String[] args) {
-		new HomeServer().connect();
+		new AndroidPIRControlServer().connect();
 	}
+
 }

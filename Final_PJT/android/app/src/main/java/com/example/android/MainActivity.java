@@ -40,6 +40,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+//import com.example.android.home.HomeControlActivity;
 
 public class MainActivity extends AppCompatActivity {
     ImageButton main_home_img;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         btn_login_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +172,14 @@ public class MainActivity extends AppCompatActivity {
             }
             return data;
         }
+        /*main_home_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),HomeControlActivity.class);
+                startActivity(intent);
+            }
+        });*/
+
     }
 
     // android로 family user 로그인 하기 위해 DB에 있는지 ID를 조회하고 있으면 true를 리턴
