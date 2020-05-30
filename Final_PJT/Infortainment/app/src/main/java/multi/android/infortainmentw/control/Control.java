@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,10 +18,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -32,10 +33,13 @@ import multi.android.infortainmentw.R;
 public class Control extends Fragment {
     double latitude;
     double longitude;
-    double km =0;
-    String temperature="";
-    String humidity="";
+    double km = 0;
+    String temperature = "";
+    String humidity = "";
     boolean airconditionerState = true;
+    ImageView airconditioner;
+    View view;
+    int delay=0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,10 +51,10 @@ public class Control extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_control, container, false);
+        view = inflater.inflate(R.layout.fragment_control, container, false);
         final Handler[] mHandler = new Handler[2];
         final SeekBar[] seekBar = {view.findViewById(R.id.seekBar), view.findViewById(R.id.seekBar2)};
-
+        airconditioner = view.findViewById(R.id.aircontioner);
         seekBar[0].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
@@ -59,14 +63,15 @@ public class Control extends Fragment {
                     public void handleMessage(@NonNull Message msg) {
                         super.handleMessage(msg);
                         Seat v1 = view.findViewById(R.id.seat);
-                        v1.dx = v1.cx + (int) (-90 * (Math.cos(((100-progress)/10 -70)* 3.14 / 100d)));
-                        v1.dy = v1.cy + (int) (90 * (Math.sin(((100-progress)/10 -70)* 3.14 / 100d)));
+                        v1.dx = v1.cx + (int) (-90 * (Math.cos(((100 - progress) / 10 - 70) * 3.14 / 100d)));
+                        v1.dy = v1.cy + (int) (90 * (Math.sin(((100 - progress) / 10 - 70) * 3.14 / 100d)));
                         v1.invalidate();
                         mHandler[1].sendEmptyMessageDelayed(10, 10);  //핸들러함수 콜 10은 식별번호, 지연시간 500밀리세컨드
                     }
                 };
                 mHandler[1].sendEmptyMessageDelayed(10, 0); // 버튼을 누를 때 0초 이므로 핸들러 함수 안으로 간다.
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
             }
@@ -76,8 +81,19 @@ public class Control extends Fragment {
             }
         });
         seekBar[1].setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int progress;
+
             @Override
-            public void onProgressChanged(SeekBar seekBar, final int progress, boolean fromUser) {
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                this.progress = progress;
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
                 mHandler[0] = new Handler() {
                     @Override
                     public void handleMessage(@NonNull Message msg) {
@@ -90,22 +106,19 @@ public class Control extends Fragment {
                         v1.invalidate();
                         */
 
-                        ImageView iv = view.findViewById(R.id.aircontioner);
-                        iv.setColorFilter(Color.rgb((int) (((progress) / 100d) * 255), 0, (int) (((100 - progress) / 100d) * 255)));
-                        mHandler[0].sendEmptyMessageDelayed(10, 10);  //핸들러함수 콜 10은 식별번호, 지연시간 500밀리세컨드
+                        airconditioner = view.findViewById(R.id.aircontioner);
+                        if (airconditionerState == true) {
+                            airconditioner.setColorFilter(Color.rgb((int) (((progress) / 100d) * 255), 0, (int) (((100 - progress) / 100d) * 255)));
+                        } else {
+                            airconditioner.setColorFilter(Color.rgb(0, 0, 0));
+                        }
+                        mHandler[0].sendEmptyMessageDelayed(20, 10);  //핸들러함수 콜 10은 식별번호, 지연시간 500밀리세컨드
                     }
                 };
-                mHandler[0].sendEmptyMessageDelayed(10, 0); // 버튼을 누를 때 0초 이므로 핸들러 함수 안으로 간다.
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
+                mHandler[0].sendEmptyMessageDelayed(20, 0); // 버튼을 누를 때 0초 이므로 핸들러 함수 안으로 간다.
             }
         });
+
         LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             @Override
@@ -120,18 +133,18 @@ public class Control extends Fragment {
 
                 } else {
                     Log.d("logCheck1", (s * 5760) + "");
-                    km += s*900;
+                    km += s * 900;
                     Velocity v1 = view.findViewById(R.id.velocity);
                     v1.dx = v1.cx + (int) (-110 * (Math.cos((s * 5760) * 3.14 / 150d)));
                     v1.dy = v1.cy + (int) (110 * (Math.sin((-s * 5760) * 3.14 / 150d)));
                     v1.invalidate();
 
                     Oil v2 = view.findViewById(R.id.oil);
-                    v2.dx = v2.cx +(int) (50 * (Math.cos((km) * 3.14 / 750d)));
+                    v2.dx = v2.cx + (int) (50 * (Math.cos((km) * 3.14 / 750d)));
                     v2.dy = v2.cy + (int) (50 * (Math.sin((-km) * 3.14 / 750d)));
-                    Log.d("logCheck2",v2.dx+"");
-                    Log.d("logCheck2",v2.dy+"");
-                    Log.d("logCheck2",km+"");
+                    Log.d("logCheck2", v2.dx + "");
+                    Log.d("logCheck2", v2.dy + "");
+                    Log.d("logCheck2", km + "");
                     v2.invalidate();
 
                     TextView tvTemp = view.findViewById(R.id.temporature);
@@ -140,8 +153,18 @@ public class Control extends Fragment {
                     tvHumi.setText(humidity + "％");
 
                     TextView tvKm = view.findViewById(R.id.km);
-                    tvKm.setTextColor(Color.rgb(255,255,255));
-                    tvKm.setText(Math.round(km)+" m");
+                    tvKm.setTextColor(Color.rgb(255, 255, 255));
+                    tvKm.setText(Math.round(km) + " m");
+                    delay++;
+                    if(delay>3) {
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MainActivity.pw.println(MainActivity.family + "/" + MainActivity.andId + "/Oil/"+(int)(100d*(750-km)/750d));
+                            }
+                        }).start();
+                        delay=0;
+                    }
                 }
 
             }
@@ -180,7 +203,7 @@ public class Control extends Fragment {
                     protected void onProgressUpdate(String... values) {
                         if (view.findViewById(R.id.ff).getVisibility() == View.INVISIBLE) {
                             view.findViewById(R.id.ff).setVisibility(View.VISIBLE);
-                            Log.d("test","check");
+                            Log.d("test", "check");
                         } else {
                             view.findViewById(R.id.ff).setVisibility(View.INVISIBLE);
                         }
@@ -195,11 +218,10 @@ public class Control extends Fragment {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        MainActivity.pw.println("rightLight");
+                        MainActivity.pw.println(MainActivity.family + "/" + MainActivity.andId+"/LED/rightLight");
                     }
                 });
                 thread.start();
-
             }
         });
 
@@ -221,7 +243,7 @@ public class Control extends Fragment {
                     protected void onProgressUpdate(String... values) {
                         if (view.findViewById(R.id.rew).getVisibility() == View.INVISIBLE) {
                             view.findViewById(R.id.rew).setVisibility(View.VISIBLE);
-                            Log.d("test","check");
+                            Log.d("test", "check");
                         } else {
                             view.findViewById(R.id.rew).setVisibility(View.INVISIBLE);
                         }
@@ -236,7 +258,7 @@ public class Control extends Fragment {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        MainActivity.pw.println("leftLight");
+                        MainActivity.pw.println(MainActivity.family + "/" + MainActivity.andId+"/LED/leftLight");
                     }
                 });
                 thread.start();
@@ -250,7 +272,7 @@ public class Control extends Fragment {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        MainActivity.pw.println("emergency");
+                        MainActivity.pw.println(MainActivity.family + "/" + MainActivity.andId+"/LED/emergency");
                     }
                 });
                 thread.start();
@@ -261,46 +283,55 @@ public class Control extends Fragment {
         airconditioner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(airconditionerState==true){
-                    airconditioner.setColorFilter(Color.rgb(0,0,0));
-                    airconditionerState= false;
+                if (airconditionerState == true) {
+                    airconditioner.setColorFilter(Color.rgb(0, 0, 0));
+                    airconditionerState = false;
+                    Log.d("check1", airconditionerState + "");
                 } else {
                     airconditioner.setColorFilter(Color.rgb((int) (((seekBar[1].getProgress()) / 100d) * 255), 0, (int) (((100 - seekBar[1].getProgress()) / 100d) * 255)));
-                    airconditionerState= true;
+                    airconditionerState = true;
+                    Log.d("check1", airconditionerState + "");
                 }
             }
         });
-
-
         return view;
-
     }
 
     public void setKm(double km) {
         this.km = km;
     }
+
     public void setTemperature(String temperature) {
         this.temperature = temperature;
     }
+
     public void setHumidity(String humidity) {
         this.humidity = humidity;
     }
 
-
-    /*
-
-    public void airconditionerOnOff(View v){
-        ImageView iv = control.getActivity().findViewById(R.id.aircontioner);
-        ImageView iv2 = v.findViewById(R.id.aircontioner);
-        Log.d("logcheck3","들어옴"+iv.getVisibility());
-        if(iv.getVisibility()==View.VISIBLE){
-            iv.setVisibility(View.INVISIBLE);
-            iv2.setColorFilter(Color.rgb(0,0,0));
+    public void setSeat(int value){
+        SeekBar sb = view.findViewById(R.id.seekBar);
+        sb.setProgress(value);
+    }
+    public void setAirconditioner(int value,boolean state){
+        airconditionerState = state;
+        SeekBar airconSB = view.findViewById(R.id.seekBar2);
+        if(state){
+            airconSB.setProgress(value);
+            airconditioner.setColorFilter(Color.rgb((int) (((value) / 100d) * 255), 0, (int) (((100 - value) / 100d) * 255)));
         } else {
-            iv.setVisibility(View.VISIBLE);
-            iv2.setColorFilter(Color.rgb(255,255,255));
+            airconSB.setProgress(value);
+            airconditioner.setColorFilter(Color.rgb(0,0,0));
+
         }
     }
-
-    */
+    public String saveState(){
+        SeekBar airconSB = view.findViewById(R.id.seekBar2);
+        String airconditioner =airconSB.getProgress()+"";
+        SeekBar seatSB = view.findViewById(R.id.seekBar);
+        String seat = seatSB.getProgress()+"";
+        String lat = latitude+"";
+        String lon = longitude+"";
+        return "airconditioner/"+airconditioner+"/"+"seat/"+seat+"/lat/"+lat+"/lon/"+lon;
+    }
 }

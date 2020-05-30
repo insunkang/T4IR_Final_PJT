@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -22,11 +23,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.gms.maps.MapView;
 import com.skt.Tmap.TMapData;
@@ -37,7 +40,18 @@ import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.util.StringTokenizer;
 
 import multi.android.infortainmentw.MainActivity;
 import multi.android.infortainmentw.R;
@@ -48,7 +62,7 @@ import multi.android.infortainmentw.R;
 public class NaviFragment extends Fragment {
 
     MapView mapView = null;
-    TMapView tMapView;
+    public TMapView tMapView;
     Context mContext = null;
     String apiKey = "l7xxfce37b4d926e4607a7d14ba4bba09475";
     TMapGpsManager tMapGpsManager = null;
@@ -58,6 +72,17 @@ public class NaviFragment extends Fragment {
     ArrayAdapter<POI> mAdapter;
     ListView listView;
     TMapPoint start, end;
+    Socket socket;
+    InputStream is;
+    DataInputStream dis;
+    InputStreamReader isr;
+    BufferedReader br;
+    OutputStream os;
+    PrintWriter pw;
+    String ip = "70.12.224.148";
+    int port = 33336;
+    View rootView;
+    NaviFragment naviFragment;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -76,7 +101,7 @@ public class NaviFragment extends Fragment {
             final NaviAsyncTask naviAsyncTask = new NaviAsyncTask();
             final Button button; // 길찾기
             Button btn; // 목적지설정
-            View rootView = inflater.inflate(R.layout.fragment_navi, container, false);
+            rootView = inflater.inflate(R.layout.fragment_navi, container, false);
             keywordView = rootView.findViewById(R.id.edit_keyword);
 
             mapView = rootView.findViewById(R.id.map);
@@ -114,23 +139,16 @@ public class NaviFragment extends Fragment {
             LocationListener locationListener = new LocationListener() {
                 @Override
                 public void onLocationChanged(Location location) {
-
-                    double tempLatitude = latitude;
-                    double tempLongitude = longitude;
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
-                    /*
-                    double s = Math.acos(Math.cos(Math.toRadians(90 - tempLatitude)) * Math.cos(Math.toRadians(90 - latitude)) + Math.sin(Math.toRadians(90 - tempLatitude)) * Math.sin(Math.toRadians(90 - latitude)) * Math.cos(Math.toRadians(tempLongitude - longitude))) * 6378.137;
-                    if (s * 3600 > 60000 || s==0.0) {
 
-                    } else {
-                        Log.d("logCheck1", (s * 3600) + "");
-                    }*/
+
                     boolean isTracking = tMapView.getIsTracking();
-                    if (isTracking==true) {
+                    if (isTracking == true) {
                         tMapView.setLocationPoint(longitude, latitude);
                         tMapView.setMapPosition(TMapView.POSITION_DEFAULT);
                     }
+
                 }
 
                 @Override
@@ -158,7 +176,7 @@ public class NaviFragment extends Fragment {
                     message = "start";
 
 
-                    Toast.makeText(getActivity(),message + " setting"+start.getLongitude()+""+start.getLatitude(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), message + " setting" + start.getLongitude() + "" + start.getLatitude(), Toast.LENGTH_SHORT).show();
                 }
             });
             btn = rootView.findViewById(R.id.btn_search);
@@ -178,10 +196,10 @@ public class NaviFragment extends Fragment {
                     //tMapView.setLocationPoint(poi.item.getPOIPoint().getLatitude(), poi.item.getPOIPoint().getLongitude());
 //                    String a = String.valueOf(poi.item.getPOIPoint().getLatitude());
 //                    String b = String.valueOf(poi.item.getPOIPoint().getLongitude());
-                    
-                    tMapView.setCenterPoint(poi.item.getPOIPoint().getLongitude(),poi.item.getPOIPoint().getLatitude(),true);
+
+                    tMapView.setCenterPoint(poi.item.getPOIPoint().getLongitude(), poi.item.getPOIPoint().getLatitude(), true);
                     //tMapView.setCenterPoint(poi.item.getPOIPoint().getLatitude(), poi.item.getPOIPoint().getLongitude());
-                  return;
+                    return;
 
                 }
             });
@@ -191,12 +209,12 @@ public class NaviFragment extends Fragment {
                 @Override
                 public void onClick(View view) {
                     tMapView.setTrackingMode(true);
-                    if (start != null ) {
+                    if (start != null) {
                         TMapPoint point = tMapGpsManager.getLocation();
                         searchRoute(point, start);
                         start = end = null;
-                    }else{
-                        Toast.makeText(getActivity(),"start or end is null", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "start or end is null", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -210,21 +228,23 @@ public class NaviFragment extends Fragment {
 //                    button.setEnabled(false);
 //                }
 //            });
-            btn = rootView.findViewById(R.id.findAddress);
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(getContext(), "message", Toast.LENGTH_LONG).show();
-                    ((MainActivity) getActivity()).replaceFragmentFindAddress();
+//            btn = rootView.findViewById(R.id.findAddress);
+//            btn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Toast.makeText(getContext(), "message", Toast.LENGTH_LONG).show();
+//                    ((MainActivity) getActivity()).replaceFragmentFindAddress();
+//
+//                }
+//            });
 
-                }
-            });
             mapView.addView(tMapView);
             return rootView;
 
         }
 
     }
+
     //==================검색기능=============================
     private void searchPOI() {
         TMapData data = new TMapData();
@@ -239,7 +259,7 @@ public class NaviFragment extends Fragment {
                             tMapView.removeAllMarkerItem();
                             mAdapter.clear();
 
-                           for (TMapPOIItem poi : arrayList) {
+                            for (TMapPOIItem poi : arrayList) {
                                 addMarker(poi);
                                 mAdapter.add(new POI(poi));
                             }
@@ -255,6 +275,7 @@ public class NaviFragment extends Fragment {
             });
         }
     }
+
     public void addMarker(TMapPOIItem poi) {
         TMapMarkerItem item = new TMapMarkerItem();
         item.setTMapPoint(poi.getPOIPoint());
@@ -273,26 +294,44 @@ public class NaviFragment extends Fragment {
 
     }
 
-    private void addMarker(double lat, double lng, String title) {
-        TMapMarkerItem item = new TMapMarkerItem();
-        TMapPoint point = new TMapPoint(lat, lng);
+    public void addMarker(double lat, double lng, String title) {
+       /* TMapMarkerItem item = new TMapMarkerItem();
+        TMapPoint point = new TMapPoint(lat,lng);
 
-        item.setTMapPoint(point);
-        Bitmap icon = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_add)).getBitmap();
+
+        //Bitmap icon = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_compass)).getBitmap();
+        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_menu_compass);
         item.setIcon(icon);
         item.setPosition(0.5f, 1);
+        item.setTMapPoint(point);
         item.setCalloutTitle(title);
         //item.setCalloutSubTitle("sub " + title);
-        Bitmap left = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert)).getBitmap();
+        //Bitmap left = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert)).getBitmap();
+        Bitmap left = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_dialog_alert);
         item.setCalloutLeftImage(left);
-        Bitmap right = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
+        //Bitmap right = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
+        Bitmap right = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_input_get);
         item.setCalloutRightButtonImage(right);
         item.setCanShowCallout(true);
 
-        tMapView.addMarkerItem("m" + id, item);
-        id++;
+        tMapView.addMarkerItem("m" , item);
+        Log.d("chat",tMapView.getMarkerItemFromID("m").toString());
+
+        getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+        Log.d("chat","addmarker");*/
+        TMapPoint destination = new TMapPoint(lat, lng);
+
+        tMapView.setTrackingMode(true);
+        if (destination != null) {
+            TMapPoint point = tMapGpsManager.getLocation();
+            searchRoute(point, destination);
+            destination = null;
+
+        } else {
+            Toast.makeText(getActivity(), "start or end is null", Toast.LENGTH_SHORT).show();
+        }
     }
-    int id = 0;
+
     boolean isInitialized = false;
 
     private void setupMap() {
@@ -300,7 +339,7 @@ public class NaviFragment extends Fragment {
 
     }
 
-//
+    //
 //    class StartPointListener implements AdapterView.OnItemClickListener{
 //
 //        @Override
@@ -314,7 +353,7 @@ public class NaviFragment extends Fragment {
 //
 //
 //    }
-    private void searchRoute(TMapPoint start, TMapPoint end){
+    private void searchRoute(TMapPoint start, TMapPoint end) {
         TMapData data = new TMapData();
         data.findPathData(start, end, new TMapData.FindPathDataListenerCallback() {
             @Override
@@ -325,8 +364,8 @@ public class NaviFragment extends Fragment {
                         path.setLineWidth(5);
                         path.setLineColor(Color.RED);
                         tMapView.addTMapPath(path);
-                        Bitmap s = ((BitmapDrawable)ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_delete)).getBitmap();
-                        Bitmap e = ((BitmapDrawable)ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
+                        Bitmap s = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_delete)).getBitmap();
+                        Bitmap e = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
                         tMapView.setTMapPathIcon(s, e);
 
                     }
