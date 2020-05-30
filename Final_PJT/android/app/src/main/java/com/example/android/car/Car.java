@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
+import android.os.StrictMode;
+import android.os.SystemClock;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +25,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.androdocs.httprequest.HttpRequest;
 import com.example.android.R;
 import com.example.android.driving.Driving_Info;
+import com.example.android.member.MemberVO;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,20 +37,36 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.Socket;
+import java.net.URL;
+
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+
 public class Car extends AppCompatActivity {
+    private String loginID;
+    private String member_family;
     ImageButton car_handle_img;
     ToggleButton car_lock;
     ToggleButton car_air;
     ImageButton car_navi;
-    ToggleButton car_seat;
+    ImageView car_seat;
     TextView edit_oil;
     ProgressBar progressBar;
     InputStream is;
@@ -55,17 +78,27 @@ public class Car extends AppCompatActivity {
 
     /* ==========================날씨========================== */
     String CITY = "seoul,KR";
-    String API = "1d05f37dc31eab19ba9ee3c97411cf25";
-    String LAT = "";
-    String LON = "";
+    private static String API = "1d05f37dc31eab19ba9ee3c97411cf25";
+    private static String LAT;
+    private static String LON;
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
 
+    StateTask stateTask;
+    public static InputStream is;
+    public static InputStreamReader isr;
+    public static BufferedReader br;
+    public static Socket socket;
+    public static OutputStream os;
+    public static PrintWriter pw;
+
+    stateSelect carStateTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
+
         pw.println("login/good");
         carMap carMap = new carMap();
         FragmentManager fragmentManager;
@@ -76,6 +109,12 @@ public class Car extends AppCompatActivity {
         transaction.commit();
         MapAsyncTask mapAsyncTask = new MapAsyncTask();
         mapAsyncTask.execute(10,20);
+
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
         car_handle_img = findViewById(R.id.car_handle_img);
         car_lock = findViewById(R.id.car_lock);
         car_air = findViewById(R.id.car_air);
@@ -86,8 +125,15 @@ public class Car extends AppCompatActivity {
 
         car_handle_img.setImageResource(R.drawable.car_handle_img);
         car_navi.setImageResource(R.drawable.car_navi);
-        edit_oil.setText("66");
+        edit_oil.setText("100");
         progressBar.setProgress(Integer.parseInt(edit_oil.getText().toString()));
+
+
+        Bundle extras = getIntent().getExtras();
+        loginID = extras.getString("loginID");
+        member_family = extras.getString("member_family");
+        Log.d("msg","로그인 아이디:::"+loginID);
+        Log.d("msg","해당 fam:::"+member_family);
 
 
         car_lock.setOnClickListener(new View.OnClickListener() {
@@ -96,9 +142,12 @@ public class Car extends AppCompatActivity {
                 if(car_lock.isChecked()){
                     car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_open));
                     Toast.makeText(Car.this,"UNLOCK",Toast.LENGTH_SHORT).show();
+                    pw.println(member_family+"/"+loginID+"/control/engineOn");
                 }else{
                     car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_close));
                     Toast.makeText(Car.this,"LOCK",Toast.LENGTH_SHORT).show();
+                    pw.println(member_family+"/"+loginID+"/control/engineOff");
+
                 }
             }
         });
@@ -106,12 +155,19 @@ public class Car extends AppCompatActivity {
         car_air.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Gson gson = new Gson();
+                MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+                String arr[] = fvo.getMember_car_state().split("/");
+                String air=arr[1];
+
                 if(car_air.isChecked()){
                     car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_open));
                     Toast.makeText(Car.this,"FAN ON",Toast.LENGTH_SHORT).show();
+                    pw.println(member_family+"/"+loginID+"/control/airOn/"+air);
                 }else{
                     car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_close));
                     Toast.makeText(Car.this,"FAN OFF",Toast.LENGTH_SHORT).show();
+                    pw.println(member_family+"/"+loginID+"/control/airOff/"+air);
                 }
             }
         });
@@ -119,13 +175,45 @@ public class Car extends AppCompatActivity {
         car_seat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(car_seat.isChecked()){
-                    car_seat.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_seat_open));
-                    Toast.makeText(Car.this,"SEAT ON",Toast.LENGTH_SHORT).show();
-                }else{
-                    car_seat.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_seat_close));
-                    Toast.makeText(Car.this,"SEAT OFF",Toast.LENGTH_SHORT).show();
-                }
+                new AsyncTask<String,String,String>(){
+
+                    @Override
+                    protected String doInBackground(String... strings) {
+                        publishProgress();
+                        SystemClock.sleep(1000);
+                        publishProgress();
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void onProgressUpdate(String... values) {
+                        super.onProgressUpdate(values);
+                        if(car_seat.getVisibility()==View.VISIBLE){
+                            car_seat.setVisibility(View.INVISIBLE);
+                        } else {
+                            car_seat.setVisibility(View.VISIBLE);
+                        }
+                    }
+
+                    @Override
+                    protected void onPostExecute(String s) {
+                        super.onPostExecute(s);
+                        car_seat.setVisibility(View.VISIBLE);
+                        carStateTask = new stateSelect();
+                        MemberVO vo = new MemberVO(loginID);
+                        carStateTask.execute(vo);
+                        while(carStateTask.getResponse().equals("")){
+                            SystemClock.sleep(10);
+                        }
+                        Gson gson = new Gson();
+                        MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+                        String arr[] = fvo.getMember_car_state().split("/");
+                        String seat=arr[3];
+                        pw.println(member_family+"/"+loginID+"/control/seatSetting/"+seat);
+                    }
+                }.execute();
+
             }
         });
 
@@ -137,7 +225,6 @@ public class Car extends AppCompatActivity {
             }
         });
 
-
         addressTxt = findViewById(R.id.address);
         updated_atTxt = findViewById(R.id.updated_at);
         statusTxt = findViewById(R.id.status);
@@ -148,7 +235,33 @@ public class Car extends AppCompatActivity {
         pressureTxt = findViewById(R.id.pressure);
         humidityTxt = findViewById(R.id.humidity);
 
+        stateTask = new StateTask();
+        stateTask.execute(10, 20);
+
+        carStateTask = new stateSelect();
+        MemberVO vo = new MemberVO(loginID);
+        carStateTask.execute(vo);
+        while(carStateTask.getResponse().equals("")){
+            SystemClock.sleep(10);
+        }
+        Gson gson = new Gson();
+        MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+        String arr[] = fvo.getMember_car_state().split("/");
+        LAT = arr[5];
+        LON = arr[7];
         new weatherTask().execute();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        /*
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        */
     }
 
     class weatherTask extends AsyncTask<String, Void, String> {
@@ -163,8 +276,16 @@ public class Car extends AppCompatActivity {
         }
 
         protected String doInBackground(String... args) {
-            String response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&units=metric&appid=" + API);
-            //String response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?lat=" + LAT + "&lon=" + LON + "&units=metric&appid=" + API);
+            String response="";
+            Log.d("msg","weather LAT::::"+LAT);
+            Log.d("msg","weather LON::::"+LON);
+            if(LAT.equals("")&&LAT==null){
+                response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&units=metric&appid=" + API);
+            }else{
+                response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?lat=" + LAT + "&lon=" + LON + "&units=metric&appid=" + API);
+            }
+
+
             return response;
         }
 
@@ -315,6 +436,127 @@ public class Car extends AppCompatActivity {
             });
 
 
+        }
+    }
+
+    class StateTask extends AsyncTask<Integer,String,String> {
+        @Override
+        protected String doInBackground(Integer... integers) {
+            try {
+
+                //socket = new Socket("70.12.228.112", 12345);
+                //socket = new Socket("70.12.225.188", 33334);
+                socket = new Socket("70.12.224.117", 33334);
+                if (socket != null) {
+                    ioWork();
+                }
+                //서버에서 전달되는 메시지를 읽는 쓰레드
+                Thread t1 = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (true) {
+                            String msg;
+                            try {
+                                msg = br.readLine();
+                                Log.d("chat", "서버로 부터 수신된 메시지>>"
+                                        + msg);
+                                filteringMsg(msg);
+                            } catch (IOException e) {
+
+                            }
+                        }
+                    }
+                });
+                t1.start();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return "";
+        }
+        void ioWork(){
+            try {
+                is = socket.getInputStream();
+                isr = new InputStreamReader(is);
+                br = new BufferedReader(isr);
+
+                os = socket.getOutputStream();
+                pw = new PrintWriter(os,true);
+                pw.println(member_family+"/"+loginID);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        void filteringMsg(String Msg){
+            StringTokenizer st = new StringTokenizer(Msg,"/");
+            String protocol = st.nextToken();
+            final String message = st.nextToken();
+            if(protocol.equals("Oil")){
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setProgress(Integer.parseInt(message));
+                        edit_oil.setText(message+"%");
+                    }
+                });
+            }
+        }
+    }
+
+
+
+    class stateSelect extends AsyncTask<MemberVO, Void, String> {
+        URL url = null;
+        BufferedReader br = null;
+        String result;
+        JSONObject object = new JSONObject();
+        String response="";
+        @Override
+        protected String doInBackground(MemberVO... items) {
+            try {
+                object.put("member_id", items[0].getMember_id());
+
+                String path = "http://70.12.230.200:8088/miri/state/select";
+                url = new URL(path);
+
+                OkHttpClient client = new OkHttpClient();
+                String json = object.toString();
+                Log.d("msg", json);
+                Request request = new Request.Builder()
+                        .url(url)
+                        .post(RequestBody.create(MediaType.parse("application/json"), json))
+                        .build();
+
+                Response response = client.newCall(request).execute();
+                result = response.body().string();
+                Log.d("msg", "result::::"+result);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            setResponse(result);
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+
+        }
+
+        public void setResponse(String response) {
+            this.response = response;
+        }
+
+        public String getResponse() {
+            return response;
         }
     }
 }

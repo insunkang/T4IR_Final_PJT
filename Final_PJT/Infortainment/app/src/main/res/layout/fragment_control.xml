@@ -43,14 +43,23 @@
                     android:tint="#00FF00"
                     android:visibility="invisible" />
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/km"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text=""/>
             <multi.android.infortainmentw.control.Velocity
                 android:id="@+id/velocity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
-            <multi.android.infortainmentw.control.Acceleration
-                android:id="@+id/acceleration"
+            <multi.android.infortainmentw.control.Seat
+                android:id="@+id/seat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <multi.android.infortainmentw.control.Oil
+                android:id="@+id/oil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -159,7 +168,9 @@
                         android:textColor="#FFFFFF" />
 
                     <ImageView
+                        android:onClick="airconditionerOnOff"
                         android:id="@+id/aircontioner"
+                        android:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
@@ -185,8 +196,7 @@
                         android:id="@+id/left_btn"
                         android:layout_width="80dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/left_btn"
-                        android:onClick="left_btn" />
+                        android:background="@drawable/left_btn"/>
 
                     <Button
                         android:id="@+id/emergency_btn"
@@ -199,11 +209,11 @@
                         android:id="@+id/right_btn"
                         android:layout_width="80dp"
                         android:layout_height="50dp"
-                        android:background="@drawable/right_btn"
-                        android:onClick="right_btn" />
+                        android:background="@drawable/right_btn"/>
                 </LinearLayout>
 
                 <AnalogClock
+                    android:onClick="resetKm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

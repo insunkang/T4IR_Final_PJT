@@ -11,18 +11,58 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Register</title>
+  <title>MIRI</title>
 
   <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="/miri/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
 
   <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="/miri/static/css/sb-admin-2.min.css" rel="stylesheet">
+<script type="text/javascript">
+		$(document).ready(function() {
+			// 아이디
+			$("#inputFamilyId").on("keyup",function(){
+				// <<jQuery에서 Ajax로 요청하기>> - get방식
+				// url => 요청 path
+				// data => 파라미터: json형식
+				// 		*json형식 {"name":"value";"name":"value";...}
+				// success함수: ajax요청해서 성공적으로 데이터를 받아왔을 때 처리할 내용을 함수로 표현
+				// dataType: ajax요청 후 응답받을 데이터의 형식
+				$.get("/miri/idCheck.do", // RequestMapping에 걸어준 것
+						{"id":$("#inputFamilyId").val()}, 
+						function(data) { //응답 데이터
+							//alert(data);
+							// ajax로 요청해서 응답받은 데이터를 <span>태그 내부에 출력
+							$("#checkVal_id").text(data);
+						},
+						"text")
+			});
+			
+			/* 동적컨텐츠에 이벤트 붙이기-on */
+			buttonAble = document.getElementById("sub");
+			$("#inputFamilyPasswordCheck").on("keyup",function(){
+				check = $("#inputFamilyPassword").val();
+				if(check == $("#inputFamilyPasswordCheck").val()){
+					$("#checkVal_pass").text("일치");
+					buttonAble.disabled = false;
+				}else{
+					$("#checkVal_pass").text("비밀번호가 일치하지 않습니다.");
+					buttonAble.disabled = true;
+				}
+				
+			});
+	
+		});
+		
+</script>
 
 </head>
 
 <body class="bg-gradient-primary">
+
+
 
   <div class="container">
 
@@ -36,43 +76,48 @@
               <div class="text-center">
                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
               </div>
-              <form class="user">
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="text" class="form-control form-control-user" id="exampleFirstName" placeholder="First Name">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="text" class="form-control form-control-user" id="exampleLastName" placeholder="Last Name">
+              <form class="user"  action="/miri/admin/register.do" method="post">
+                
+                <div class="form-group">
+                  <input type="text" class="form-control form-control-user" name="family_id" id="inputFamilyId" placeholder="ID">
+                  <div style="text-align:right;">
+                  	<span id="checkVal_id" style="color: red;" ></span>
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-user" id="exampleInputEmail" placeholder="Email Address">
+                  <input type="password" class="form-control form-control-user" name="family_pass" id="inputFamilyPassword" placeholder="Password">
                 </div>
-                <div class="form-group row">
-                  <div class="col-sm-6 mb-3 mb-sm-0">
-                    <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
-                  </div>
-                  <div class="col-sm-6">
-                    <input type="password" class="form-control form-control-user" id="exampleRepeatPassword" placeholder="Repeat Password">
-                  </div>
+                <div class="form-group">
+                  <input type="password" class="form-control form-control-user" id="inputFamilyPasswordCheck" placeholder="Password check">
                 </div>
-                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                  Register Account
-                </a>
+                <div style="text-align:right;">
+                	<label id= "checkVal_pass" class="text-danger"></label>
+                </div>
+                <button id="sub" type="submit" class="btn btn-primary btn-user btn-block" style="">Register Account</button>
                 <hr>
-                <a href="index.html" class="btn btn-google btn-user btn-block">
-                  <i class="fab fa-google fa-fw"></i> Register with Google
-                </a>
-                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                  <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                </a>
               </form>
               <hr>
               <div class="text-center">
-                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                <a class="small" href="login.do"></a>
+              </div>
+              
+              <div class="text-center">
+                <a class="small">Already have an account? Good!</a>
               </div>
               <div class="text-center">
-                <a class="small" href="login.html">Already have an account? Login!</a>
+                <a class="small">Already have an account? Good!</a>
+              </div>
+              <div class="text-center">
+                <a class="small">Already have an account? Good!</a>
+              </div>
+              <div class="text-center">
+                <a class="small">Already have an account? Good!</a>
+              </div>
+              <div class="text-center">
+                <a class="small">Already have an account? Good!</a>
+              </div>
+              <div class="text-center">
+                <a class="small">Already have an account? Good!</a>
               </div>
             </div>
           </div>
@@ -83,14 +128,14 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="vendor/jquery/jquery.min.js"></script>
-  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/miri/static/vendor/jquery/jquery.min.js?v=<%=System.currentTimeMillis() %>"></script>
+  <script src="/miri/static/vendor/bootstrap/js/bootstrap.bundle.min.js?v=<%=System.currentTimeMillis() %>"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+  <script src="/miri/static/vendor/jquery-easing/jquery.easing.min.js?v=<%=System.currentTimeMillis() %>"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="js/sb-admin-2.min.js"></script>
+  <script src="/miri/static/js/sb-admin-2.min.js?v=<%=System.currentTimeMillis() %>"></script>
 
 </body>
 

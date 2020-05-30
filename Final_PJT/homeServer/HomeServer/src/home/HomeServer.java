@@ -28,6 +28,7 @@ public class HomeServer {
 						String ip = client.getInetAddress().getHostAddress();
 						System.out.println(ip+"접속!!\\n");
 						User user = new User(client, userlist,homelist);
+					
 						user.start();
 						
 					} catch (IOException e) {
