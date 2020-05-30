@@ -12,7 +12,9 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.android.MainActivity;
 import com.example.android.R;
+import com.example.android.car.Car;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +23,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import static com.example.android.R.id.driving_left;
 
@@ -43,7 +44,7 @@ public class Driving extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("mykim","onCreate");
+        Log.d("mykim", "onCreate");
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_driving);
         webView = findViewById(R.id.driving_view);
@@ -61,12 +62,11 @@ public class Driving extends AppCompatActivity {
                 finish();
             }
         });
-        Log.d("mykim","선택됨");
+        Log.d("mykim", "선택됨");
         myAsyncTask = new MyAsyncTask();
-        myAsyncTask.execute(10,20);
+        myAsyncTask.execute(10, 20);
 
         webView.loadUrl(DRIVE_URL);
-
         forward.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View v, final MotionEvent event) {
@@ -74,13 +74,13 @@ public class Driving extends AppCompatActivity {
                     @Override
                     public void run() {
                         int action = event.getAction();
-                        String message ="";
-                        if(action==MotionEvent.ACTION_DOWN){
-                            message= "forward";
-                        }else if(action==MotionEvent.ACTION_UP){
-                            message = "stop";
+                        String message = "";
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            message = "move/forward";
+                        } else if (action == MotionEvent.ACTION_UP) {
+                            message = "move/stop";
                         }
-                        pw.println(message);
+                        pw.println(MainActivity.member_family + "/" + MainActivity.loginID + "/" + message);
                     }
                 }).start();
 
@@ -94,14 +94,14 @@ public class Driving extends AppCompatActivity {
                     @Override
                     public void run() {
                         int action = event.getAction();
-                        String message =" ";
+                        String message = "";
 
-                        if(action==MotionEvent.ACTION_DOWN){
-                            message= "left";
-                        }else if(action==MotionEvent.ACTION_UP){
-                            message = "stop";
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            message = "move/left";
+                        } else if (action == MotionEvent.ACTION_UP) {
+                            message = "move/stop";
                         }
-                        pw.println(message);
+                        pw.println(MainActivity.member_family + "/" + MainActivity.loginID + "/" + message);
                     }
                 }).start();
 
@@ -115,14 +115,14 @@ public class Driving extends AppCompatActivity {
                     @Override
                     public void run() {
                         int action = event.getAction();
-                        String message =" ";
+                        String message = " ";
 
-                        if(action==MotionEvent.ACTION_DOWN){
-                            message= "right";
-                        }else if(action==MotionEvent.ACTION_UP){
-                            message = "stop";
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            message = "move/right";
+                        } else if (action == MotionEvent.ACTION_UP) {
+                            message = "move/stop";
                         }
-                        pw.println(message);
+                        pw.println(MainActivity.member_family + "/" + MainActivity.loginID + "/" + message);
                     }
                 }).start();
 
@@ -136,14 +136,14 @@ public class Driving extends AppCompatActivity {
                     @Override
                     public void run() {
                         int action = event.getAction();
-                        String message =" ";
+                        String message = " ";
 
-                        if(action==MotionEvent.ACTION_DOWN){
-                            message= "back";
-                        }else if(action==MotionEvent.ACTION_UP){
-                            message = "stop";
+                        if (action == MotionEvent.ACTION_DOWN) {
+                            message = "move/back";
+                        } else if (action == MotionEvent.ACTION_UP) {
+                            message = "move/stop";
                         }
-                        pw.println(message);
+                        pw.println(MainActivity.member_family + "/" + MainActivity.loginID + "/" + message);
                     }
                 }).start();
 
@@ -153,45 +153,45 @@ public class Driving extends AppCompatActivity {
     }
 
 
-    public void send_msg(final View view){
+    public void send_msg(final View view) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String message="";
-                if(view.getId()==R.id.driving_forward){
-                    message = "forward";
-                }else if(view.getId()== driving_left){
-                    message = "left";
-                }else if(view.getId()==R.id.driving_right){
-                    message = "right";
-                }else if(view.getId()==R.id.driving_back){
-                    message = "back";
-                }else if(view.getId()==R.id.velo_up){
-                    message = "up";
-                }else if(view.getId()==R.id.velo_down){
-                    message = "down";
-                }else if(view.getId()==R.id.driving_leftSpin){
-                    message = "leftspin";
-                }else if(view.getId()==R.id.driving_rightSpin){
-                    message = "rightspin";
+                String message = " ";
+                if (view.getId() == R.id.driving_forward) {
+                    message = "move/forward";
+                } else if (view.getId() == driving_left) {
+                    message = "move/left";
+                } else if (view.getId() == R.id.driving_right) {
+                    message = "move/right";
+                } else if (view.getId() == R.id.driving_back) {
+                    message = "move/back";
+                } else if (view.getId() == R.id.velo_up) {
+                    message = "move/up";
+                } else if (view.getId() == R.id.velo_down) {
+                    message = "move/down";
+                } else if (view.getId() == R.id.driving_leftSpin) {
+                    message = "move/leftspin";
+                } else if (view.getId() == R.id.driving_rightSpin) {
+                    message = "move/rightspin";
                 }
 
-                Log.d("msg",message);
+                Log.d("msg", message);
                 //서버로 메시지 전송하기
-                if(message!="") pw.println(message);
-                pw.flush();
+                if (message != "")
+                    pw.println(MainActivity.member_family + "/" + MainActivity.loginID + "/" + message);
             }
         }).start();
     }
 
-    class MyAsyncTask extends AsyncTask<Integer,String,String> {
+    class MyAsyncTask extends AsyncTask<Integer, String, String> {
         @Override
         protected String doInBackground(Integer... integers) {
             try {
 
                 //socket = new Socket("70.12.228.112", 12345);
                 //socket = new Socket("70.12.225.188", 33334);
-                socket = new Socket("70.12.224.117", 33334);
+                socket = Car.socket;
                 if (socket != null) {
                     ioWork();
                 }
@@ -212,35 +212,24 @@ public class Driving extends AppCompatActivity {
                     }
                 });
                 t1.start();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return "";
         }
-        void ioWork(){
-            try {
-                is = socket.getInputStream();
-                isr = new InputStreamReader(is);
-                br = new BufferedReader(isr);
 
-                os = socket.getOutputStream();
-                pw = new PrintWriter(os,true);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        void ioWork() {
+            is = Car.is;
+            isr = Car.isr;
+            br = Car.br;
+            os = Car.os;
+            pw = Car.pw;
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }
