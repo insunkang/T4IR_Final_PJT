@@ -6,7 +6,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+
 
     <application
         android:allowBackup="true"
@@ -15,26 +21,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-
-
-        
+        android:usesCleartextTraffic="true">      
         <activity android:name=".home.HomeControlActivity"></activity>
         <activity android:name=".home.air.AirControlActivity"></activity>
         <activity android:name=".home.gas.GasControlActivity"></activity>
         <activity android:name=".home.light.LightControlActivity"></activity>
-
         <activity android:name=".car.Car" />
         <activity android:name=".driving.Driving_Info" />
         <activity
             android:name=".driving.Driving"
             android:configChanges="screenSize|orientation" />
-
-        <activity android:name=".home.security.NotiActivity" />
-
-        
+        <activity android:name=".home.security.NotiActivity" />      
         <activity android:name=".home.security.PopupActivity" android:theme="@android:style/Theme.Dialog" />
-        
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,6 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCPym8BlOiqzYuhwElya63AaS5miu29frM" />
 
         <service
             android:name=".home.security.MyService3"
