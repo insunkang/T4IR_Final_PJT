@@ -7,11 +7,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Map;
 
+import multi.android.infortainmentw.Variable;
+
 public class Task extends AsyncTask<Map<String, String>, Integer, String> {
     private String result = "";
     private String method;
 
-    public static String ip = "70.12.230.200"; // spring 서버의 ip.
+    public static String ip = Variable.springIP; // spring 서버의 ip.
     @Override
     protected String doInBackground(Map<String, String>... maps) { // 내가 전송하고 싶은 파라미터
         method = maps[0].get("method");

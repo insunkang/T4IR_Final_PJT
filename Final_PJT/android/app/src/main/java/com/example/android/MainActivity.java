@@ -98,28 +98,35 @@ public class MainActivity extends AppCompatActivity {
                 HttpSelect task = new HttpSelect();
                 task.execute(vo);
                 res= task.getResponse();
-
+                int count =0;
                 while(res==""||res==null){
                     SystemClock.sleep(10);
                     res= task.getResponse();
+                    count ++;
+                    if(count>300){
+                        Toast.makeText(MainActivity.this, "ID,PASSWORD를 확인하세요.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
                 }
+                if(res!=""||res!=null) {
+                    Log.d("check1",res);
+                    Gson gson = new Gson();
+                    MemberVO fvo = gson.fromJson(res, MemberVO.class);
+                    String fvoMember_family = fvo.getMember_family();
+                    String fvoMember_pass = fvo.getMember_pass();
+                    String fvoMember_id = fvo.getMember_id();
 
-                Gson gson = new Gson();
-                MemberVO fvo = gson.fromJson(res, MemberVO.class);
-                String fvoMember_family = fvo.getMember_family();
-                String fvoMember_pass = fvo.getMember_pass();
-                String fvoMember_id = fvo.getMember_id();
-
-                if(fvoMember_id.equals(id) && fvoMember_pass.equals(pass)){
-                    loginlayout.setVisibility(View.INVISIBLE);
-                    loginID = fvoMember_id;
-                    member_family = fvoMember_family;
-                    intentCar = new Intent(MainActivity.this, Car.class);
-                    intentCar.putExtra("loginID", loginID);
-                    intentCar.putExtra("member_family", member_family);
-                    Toast.makeText(MainActivity.this, "로그인이 되었습니다.",Toast.LENGTH_LONG).show();
-                }else{
-                    Toast.makeText(MainActivity.this, "로그인에 실패하였습니다.",Toast.LENGTH_LONG).show();
+                    if (fvoMember_id.equals(id) && fvoMember_pass.equals(pass)) {
+                        loginlayout.setVisibility(View.INVISIBLE);
+                        loginID = fvoMember_id;
+                        member_family = fvoMember_family;
+                        intentCar = new Intent(MainActivity.this, Car.class);
+                        intentCar.putExtra("loginID", loginID);
+                        intentCar.putExtra("member_family", member_family);
+                        Toast.makeText(MainActivity.this, "로그인이 되었습니다.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "로그인에 실패하였습니다.", Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -151,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 object.put("member_pass", items[0].getMember_pass());
                 object.put("member_family", items[0].getMember_family());
 
-                url = new URL("http://70.12.230.200:8088/miri/member/insert");
+                url = new URL("http://"+Variable.springIP+":8088/miri/member/insert");
 
                 OkHttpClient client = new OkHttpClient();
                 String json = object.toString();
@@ -195,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 object.put("member_id", items[0].getMember_id());
                 object.put("member_pass", items[0].getMember_pass());
 
-                String path = "http://70.12.230.200:8088/miri/member/select";
+                String path = "http://"+Variable.springIP+":8088/miri/member/select";
                 url = new URL(path);
 
                 OkHttpClient client = new OkHttpClient();
