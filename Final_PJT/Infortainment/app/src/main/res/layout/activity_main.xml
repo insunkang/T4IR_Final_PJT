@@ -4,71 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
-    <fragment
-        android:id="@+id/navi_frag"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="multi.android.infortainmentw.navi.NaviFragment"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-
-    </fragment>
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFF00"
+        android:layout_weight="1">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <fragment
+                android:id="@+id/navi_frag"
+                android:name="multi.android.infortainmentw.navi.NaviFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"></fragment>
+            <LinearLayout
+                android:id="@+id/black"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:orientation="horizontal" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:orientation="vertical"
-        >
+        android:background="#FFFF00"
+        android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FF00FF"
             android:layout_weight="1"
-            >
+            android:background="#FF00FF">
+
             <fragment
                 android:id="@+id/fragment_control"
                 android:name="multi.android.infortainmentw.control.Control"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#FFFFFF"
             android:layout_weight="1"
-            >
+            android:background="#FFFFFF">
+
             <fragment
                 android:id="@+id/fragment_music"
                 android:name="multi.android.infortainmentw.music.MusicFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
 
     </LinearLayout>
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="invisible">
+
         <Button
             android:id="@+id/btn_stt_start"
             android:layout_width="2dp"
-            android:layout_height="2dp"/>
+            android:layout_height="2dp" />
 
         <EditText
             android:id="@+id/txtInMsg"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
         <EditText
             android:id="@+id/txtSystem"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
+
 </LinearLayout>
