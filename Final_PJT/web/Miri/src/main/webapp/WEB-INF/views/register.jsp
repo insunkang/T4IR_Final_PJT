@@ -79,13 +79,13 @@
               <form class="user"  action="/miri/admin/register.do" method="post">
                 
                 <div class="form-group">
-                  <input type="text" class="form-control form-control-user" name="family_id" id="inputFamilyId" placeholder="ID">
+                  <input type="text" class="form-control form-control-user" name="member_id" id="inputFamilyId" placeholder="ID">
                   <div style="text-align:right;">
                   	<span id="checkVal_id" style="color: red;" ></span>
                   </div>
                 </div>
                 <div class="form-group">
-                  <input type="password" class="form-control form-control-user" name="family_pass" id="inputFamilyPassword" placeholder="Password">
+                  <input type="password" class="form-control form-control-user" name="member_pass" id="inputFamilyPassword" placeholder="Password">
                 </div>
                 <div class="form-group">
                   <input type="password" class="form-control form-control-user" id="inputFamilyPasswordCheck" placeholder="Password check">

@@ -48,10 +48,10 @@
                   </div>
                   <form class="user" action="/miri/index.do" method="post">
                     <div class="form-group">
-                      <input type="text" class="form-control form-control-user" name="family_id" id="inputAdminId" aria-describedby="emailHelp" placeholder="Enter Id...">
+                      <input type="text" class="form-control form-control-user" name="member_id" id="inputAdminId" aria-describedby="emailHelp" placeholder="Enter Id...">
                     </div>
                     <div class="form-group">
-                      <input type="password" class="form-control form-control-user" name="family_pass" id="inputAdminPassword" placeholder="Password">
+                      <input type="password" class="form-control form-control-user" name="member_pass" id="inputAdminPassword" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-primary btn-user btn-block" style="">Login</button>
 	                <div class="text-center">
