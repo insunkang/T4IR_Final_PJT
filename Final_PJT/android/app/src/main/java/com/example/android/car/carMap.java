@@ -178,8 +178,6 @@ public class carMap extends Fragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-
-
                                 Car.pw.println("start/"+setNavi.getLongitude()+","+setNavi.getLatitude());
                                 Car.pw.flush();
                             }
@@ -210,10 +208,6 @@ public class carMap extends Fragment {
                     ListView listView2 = rootView.findViewById(R.id.listView);
                     listView2.setBackground(Drawable.createFromPath("#4D000000"));
                      searchPOI();
-
-
-
-
                 }
             });
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -233,7 +227,6 @@ public class carMap extends Fragment {
 
                 }
             });
-
 
 //            button = rootView.findViewById(R.id.road);
 //            button.setOnClickListener(new View.OnClickListener() {

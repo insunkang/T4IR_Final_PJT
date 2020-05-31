@@ -89,14 +89,10 @@ public class MainActivity extends AppCompatActivity {
     OutputStream os;
     public static PrintWriter pw;
 
-    String lon;
-    String lat;
-   // String ip = "70.12.224.148";
-    //int port = 33336;
     Button btn;
     TMapGpsManager tMapGpsManager;
 
-    String ip = "70.12.224.117";
+    String ip = Variable.tcpIP;
     int port = 33336;
     public static String andId; // 로그인
     public static String family;
@@ -333,11 +329,6 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 protected void onProgressUpdate(String... values) {
-
-                    TextView tvTemp = findViewById(R.id.temporature);
-                    TextView tvHumi = findViewById(R.id.humidity);
-                    tvTemp.setText(temporature + "℃");
-                    tvHumi.setText(humidity + "％");
                     TextView a = findViewById(R.id.a);
                     TextView b = findViewById(R.id.b);
                     a.setText(lon);
@@ -350,9 +341,6 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
-
-
-
                 }
             }.execute();
         }
