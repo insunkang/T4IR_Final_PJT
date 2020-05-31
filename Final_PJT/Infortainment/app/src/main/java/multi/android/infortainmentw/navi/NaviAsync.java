@@ -47,7 +47,7 @@ public class NaviAsync extends Fragment {
 
 
             View rootView = inflater.inflate(R.layout.fragment_navi,container,false);
-            mapView = rootView.findViewById(R.id.map);
+           // mapView = rootView.findViewById(R.id.map);
             tMapView = new TMapView(getActivity());
             tMapGpsManager = new TMapGpsManager(getActivity());
             tMapGpsManager.setMinTime(1000);

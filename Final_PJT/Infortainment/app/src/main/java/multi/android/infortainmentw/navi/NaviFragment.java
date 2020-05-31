@@ -83,6 +83,8 @@ public class NaviFragment extends Fragment {
     int port = 33336;
     View rootView;
     NaviFragment naviFragment;
+    TextView a;
+    TextView b;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -103,7 +105,6 @@ public class NaviFragment extends Fragment {
             Button btn; // 목적지설정
             rootView = inflater.inflate(R.layout.fragment_navi, container, false);
             keywordView = rootView.findViewById(R.id.edit_keyword);
-
             mapView = rootView.findViewById(R.id.map);
             tMapView = new TMapView(getActivity());
             tMapGpsManager = new TMapGpsManager(getActivity());
@@ -147,6 +148,14 @@ public class NaviFragment extends Fragment {
                     if (isTracking == true) {
                         tMapView.setLocationPoint(longitude, latitude);
                         tMapView.setMapPosition(TMapView.POSITION_DEFAULT);
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                String carloc = "start/"+longitude+","+latitude;
+//                                MainActivity.pw.println(carloc);
+//                            }
+//                        });
+
                     }
 
                 }
@@ -238,6 +247,36 @@ public class NaviFragment extends Fragment {
 //                }
 //            });
 
+            final TextView a = rootView.findViewById(R.id.a);
+            final TextView b = rootView.findViewById(R.id.b);
+            btn = rootView.findViewById(R.id.justforNavi);
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tMapView.removeAllMarkerItem();
+                    Log.d("check",a.getText()+""+b.getText()+"");
+                    tMapView.setTrackingMode(false);
+                   addMarker(Double.parseDouble((String) b.getText()), Double.parseDouble((String) a.getText()),"Miri");
+                    tMapView.setCenterPoint(Double.parseDouble((String) a.getText()),Double.parseDouble((String) b.getText()),true);
+                   // addMarker(127.037573, 37.50265712,"Miri");
+                   // addMarker(37.50265712, 127.037573,"Miri");
+                }
+            });
+//            btn = rootView.findViewById(R.id.sendGPS);
+//            btn.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //String carloc = "start/"+longitude+","+latitude;
+//                            String carloc = "start/126.985302,37.570841";
+//                            MainActivity.pw.println(carloc);
+//                        }
+//                    });
+//                }
+//            });
             mapView.addView(tMapView);
             return rootView;
 
@@ -295,7 +334,8 @@ public class NaviFragment extends Fragment {
     }
 
     public void addMarker(double lat, double lng, String title) {
-       /* TMapMarkerItem item = new TMapMarkerItem();
+
+        TMapMarkerItem item = new TMapMarkerItem();
         TMapPoint point = new TMapPoint(lat,lng);
 
 
@@ -318,18 +358,19 @@ public class NaviFragment extends Fragment {
         Log.d("chat",tMapView.getMarkerItemFromID("m").toString());
 
         getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-        Log.d("chat","addmarker");*/
-        TMapPoint destination = new TMapPoint(lat, lng);
+
+        Log.d("chat","addmarker");
+    /*    TMapPoint destination = new TMapPoint(lat,lng);
 
         tMapView.setTrackingMode(true);
-        if (destination != null) {
+        if (destination != null ) {
+
             TMapPoint point = tMapGpsManager.getLocation();
             searchRoute(point, destination);
             destination = null;
-
-        } else {
-            Toast.makeText(getActivity(), "start or end is null", Toast.LENGTH_SHORT).show();
-        }
+        }else{
+            Toast.makeText(getActivity(),"start or end is null", Toast.LENGTH_SHORT).show();
+        }*/
     }
 
     boolean isInitialized = false;
@@ -353,7 +394,9 @@ public class NaviFragment extends Fragment {
 //
 //
 //    }
-    private void searchRoute(TMapPoint start, TMapPoint end) {
+
+    public void searchRoute(TMapPoint start, TMapPoint end){
+
         TMapData data = new TMapData();
         data.findPathData(start, end, new TMapData.FindPathDataListenerCallback() {
             @Override
@@ -427,6 +470,14 @@ public class NaviFragment extends Fragment {
             super.onPostExecute(string);
         }
 
+    }
+    public void gogo(){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
     }
 
 }

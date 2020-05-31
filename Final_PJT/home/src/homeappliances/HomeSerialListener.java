@@ -3,37 +3,48 @@ package homeappliances;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.StringTokenizer;
 
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-//ÀÌº¥Æ®¿¡ ´ëÇØ Ã³¸®ÇÏ´Â ¸®½º³Ê Å¬·¡½º
-//½Ã¸®¾óÆ÷Æ®·Î µ¥ÀÌÅÍ°¡ Àü¼ÛµÉ¶§¸¶´Ù ÀÌº¥Æ®°¡ ¹ß»ıÇÏ°í ÀÌº¥Æ®°¡ ¹ß»ıµÉ¶§ µ¥ÀÌÅÍ¸¦ ÀĞ±â
+//ì´ë²¤íŠ¸ì— ëŒ€í•´ ì²˜ë¦¬í•˜ëŠ” ë¦¬ìŠ¤ë„ˆ í´ë˜ìŠ¤
+//ì‹œë¦¬ì–¼í¬íŠ¸ë¡œ ë°ì´í„°ê°€ ì „ì†¡ë ë•Œë§ˆë‹¤ ì´ë²¤íŠ¸ê°€ ë°œìƒí•˜ê³  ì´ë²¤íŠ¸ê°€ ë°œìƒë ë•Œ ë°ì´í„°ë¥¼ ì½ê¸°
 public class HomeSerialListener implements SerialPortEventListener{
 	private InputStream in;
 	private PrintWriter pw;
 	String homeId;
+	StringTokenizer st;
 	public HomeSerialListener(InputStream in, PrintWriter pw, String homeId) {
 		super();
 		this.in = in;
 		this.pw = pw;
 		this.homeId = homeId;
 	}
-	//ÀÌº¥Æ®°¡ ¹ß»ıµÉ¶§¸¶´Ù È£ÃâµÇ´Â ¸Ş¼Òµå
-	//¹ß»ıÇÑ ÀÌº¥Æ®ÀÌ¤Ñ Á¤º¸¸¦ ´ã°í ÀÖ´Â °´Ã¼ - SerialPortEvent
+	//ì´ë²¤íŠ¸ê°€ ë°œìƒë ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
+	//ë°œìƒí•œ ì´ë²¤íŠ¸ì´ã…¡ ì •ë³´ë¥¼ ë‹´ê³  ìˆëŠ” ê°ì²´ - SerialPortEvent
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		//Àü¼ÛµÈ µ¥ÀÌÅÍ°¡ ÀÖ´Â °æ¿ì µ¥ÀÌÅÍ¸¦ ÀĞ¾î¼­ ÄÜ¼Ö¿¡ Ãâ·Â
+		//ì „ì†¡ëœ ë°ì´í„°ê°€ ìˆëŠ” ê²½ìš° ë°ì´í„°ë¥¼ ì½ì–´ì„œ ì½˜ì†”ì— ì¶œë ¥
 		if(event.getEventType()==SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				//Àü¼ÛµÇ´Â µ¥ÀÌÅÍÀÇ Å©±â¸¦ ÃßÃâ
+				//ì „ì†¡ë˜ëŠ” ë°ì´í„°ì˜ í¬ê¸°ë¥¼ ì¶”ì¶œ
 				int check_size = in.available();
 				byte[] data = new byte[check_size];
 				in.read(data,0,check_size);
-				System.out.println("¹ŞÀº µ¥ÀÌÅÍ:"+new String(data));
 				String msg = new String(data);
+				msg=msg.trim();
+				System.out.println("ë°›ì€ ë°ì´í„°:"+msg);
 				if(msg!=""&msg!="\n") {
-					pw.println("job/"+msg+"/"+"home/"+homeId);
+					st = new StringTokenizer(msg, "/");
+					String classify = st.nextToken();
+					if(classify.equals("pan")) {
+						pw.println(msg+"/home/"+homeId);
+						pw.flush();
+					}else if(classify.equals("pirLed")) {
+						pw.println(msg+"/home/"+homeId);
+						pw.flush();
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

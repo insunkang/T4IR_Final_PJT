@@ -13,28 +13,22 @@
     app:umanoShadowHeight="5dp"
     tools:context=".car.Car">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="인선이 지도 작업"
-            android:textColor="@color/mBlack"
-            android:textSize="30dp" />
-    </LinearLayout>
+        <fragment
+            android:id="@+id/car_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:name="com.example.android.car.carMap"
+            />
+
+
 
     <LinearLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:background="@color/white"
+        android:background="@color/mGray"
         android:clickable="true"
         android:focusable="false"
         android:orientation="vertical">
@@ -51,7 +45,7 @@
             <LinearLayout
                 android:layout_width="330dp"
                 android:layout_height="220dp"
-                android:background="@color/white"
+                android:background="@color/mGray"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -108,7 +102,7 @@
                     android:layout_height="110dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/mGray"
                     android:scaleType="fitXY" />
 
                 <LinearLayout
@@ -131,7 +125,7 @@
                             android:id="@+id/car_navi"
                             android:layout_width="130dp"
                             android:layout_height="match_parent"
-                            android:background="@color/white"
+                            android:background="@color/mGray"
                             android:scaleType="fitCenter" />
                     </LinearLayout>
 
@@ -143,11 +137,11 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <ToggleButton
+                        <ImageView
                             android:id="@+id/car_seat"
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
-                            android:background="@drawable/car_seat_toggle"
+                            android:src="@drawable/car_seat_open"
                             android:checked="false"
                             android:scaleType="fitCenter"
                             android:textOff=""
@@ -260,7 +254,7 @@
                         <TextView android:id="@+id/address" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:textSize="27dp"
                             android:textColor="@color/white"
-                            android:text="DHAKA, BD"/>
+                            android:text="SEOUL, KR"/>
                         <TextView android:id="@+id/updated_at" android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:textSize="12dp"
                             android:textColor="@color/gray"

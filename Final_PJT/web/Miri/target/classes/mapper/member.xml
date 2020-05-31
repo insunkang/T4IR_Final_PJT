@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="member">
+	<insert id="insert" parameterType="member">
+		insert into member values(#{member_id}, #{member_pass}, '', '')
+	</insert>
+	
+	<select id="login" resultType="member" parameterType="member">
+		select m.member_id, m.member_pass
+		from member m
+		where member_id=#{member_id} and member_pass=#{member_pass}
+	</select>
+	
+	<select id="idcheck" resultType="member" parameterType="String" >
+		select * 
+		from member
+		where member_id=#{id}
+	</select>
+	
+	<insert id="memberInsert" parameterType="map">
+  		insert into member values(#{member_id}, #{member_pass}, '', 'airconditioner/60/seat/0/lat/37.50636880006275/lon/127.03268433935365', #{member_family})
+  	</insert>
+	
+	<select id="memberSelect" resultType="member" parameterType="map">
+		select *
+		from member
+		where member_id=#{member_id} and member_pass=#{member_pass}
+	</select>
+	
+	<select id="stateSelect" resultType="member">
+		select *
+		from member f
+		where member_id=#{id}
+	</select>
+	
+	<update id="stateUpdate" parameterType="Map">
+		update member
+		set member_car_state = #{member_car_state}
+		where member_id = #{member_id}
+	</update>
+</mapper>
+

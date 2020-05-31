@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,7 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+
 import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,6 +35,11 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPoint;
 
@@ -63,6 +73,7 @@ import multi.android.infortainmentw.navi.NaviMain;
 public class MainActivity extends AppCompatActivity {
     // ================================
     // 프래그먼트
+    MapView mapView;
     Control control = new Control();
     MusicFragment musicFragment = new MusicFragment();
     FindAddress findAddress = new FindAddress();
@@ -77,6 +88,14 @@ public class MainActivity extends AppCompatActivity {
     BufferedReader br;
     OutputStream os;
     public static PrintWriter pw;
+
+    String lon;
+    String lat;
+   // String ip = "70.12.224.148";
+    //int port = 33336;
+    Button btn;
+    TMapGpsManager tMapGpsManager;
+
     String ip = "70.12.224.117";
     int port = 33336;
     public static String andId; // 로그인
@@ -97,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
     EditText txtSystem;
     SpeechAsyncTast speechAsyncTast;
 
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,10 +130,14 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
         } else {
+            mapView =findViewById(R.id.map);
+
             setContentView(R.layout.activity_main);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            FragmentManager fragmentManager;
+
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            final FragmentManager fragmentManager;
+
             fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction;
             transaction = fragmentManager.beginTransaction();
@@ -122,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.navi_frag, naviFragment);
             transaction.commit();
 
+
+            btn = findViewById(R.id.sendGPS);
+           // final Button button = naviFragment.findViewById(R.id.sendGPS);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    btn.callOnClick();
+                }
+            });
             //음성인식부분 시작
             cThis = this;
 
@@ -149,8 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
                     mRecognizer.startListening(SttIntent);
 
+
                 }
             });
+
 
             //입력 박스 설정
             txtInMsg = findViewById(R.id.txtInMsg);
@@ -187,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
             //******************************************************************
 
 
+
             new AsyncTask<String, String, String>() {
                 String temperature = "";
                 String humidity = "";
@@ -197,6 +233,7 @@ public class MainActivity extends AppCompatActivity {
                         socket = new Socket(ip, port);
                         if (socket != null) {
                             ioWork();
+
                         }
                         Thread t1 = new Thread(new Runnable() {
                             @Override
@@ -243,11 +280,13 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         StringTokenizer token = new StringTokenizer(msg, "/");
                         String protocol = token.nextToken();
+
                         String message = "";
                         if (token.hasMoreTokens()) {
                             message = token.nextToken();
                         }
                         Log.d("chat", "프로토콜:" + protocol + ",메시지:" + message);
+
                         if (protocol.equals("temperature")) {
                             temperature = message;
                             control.setTemperature(message);
@@ -262,6 +301,15 @@ public class MainActivity extends AppCompatActivity {
                             naviFragment.tMapView.setCenterPoint(127.037573, 37.50265712);
                             naviFragment.addMarker(37.50265712, 127.037573, "Miri");
                             Log.d("chat", "protocolstart");
+                          /*
+                          String[] longlat = message.split(",");
+                                lon = longlat[0];
+                                lat = longlat[1];
+                                Log.d("chat",lon+lat);
+                                publishProgress(lon,lat);
+                                 Log.d("chat","protocolstart");
+                          */
+                          
                         } else if (protocol.equals("seatSetting")) {
                             control.setSeat(Integer.parseInt(message));
                         } else if (protocol.equals("engineOff")) {
@@ -272,14 +320,39 @@ public class MainActivity extends AppCompatActivity {
                             control.setAirconditioner(Integer.parseInt(message), false);
                         } else if (protocol.equals("engineOn")) {
                             engineOnOff("engineOn");
+                        }else if(protocol.equals("login")){
+                            TMapPoint point = tMapGpsManager.getLocation();
+                            double lati = point.getLatitude();
+                            double longi = point.getLongitude();
+                            String sendGPS = "sendGPS/"+lati+","+longi;
+                            pw.println(sendGPS);
                         }
                     } catch (NoSuchElementException e) {
-
                     }
                 }
 
                 @Override
                 protected void onProgressUpdate(String... values) {
+
+                    TextView tvTemp = findViewById(R.id.temporature);
+                    TextView tvHumi = findViewById(R.id.humidity);
+                    tvTemp.setText(temporature + "℃");
+                    tvHumi.setText(humidity + "％");
+                    TextView a = findViewById(R.id.a);
+                    TextView b = findViewById(R.id.b);
+                    a.setText(lon);
+                    b.setText(lat);
+                    final Button button = findViewById(R.id.justforNavi);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            button.callOnClick();
+
+                        }
+                    });
+
+
+
                 }
             }.execute();
         }
@@ -333,7 +406,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.navi_frag, naviFragment);
         transaction.commit();
     }
-
     //////////////////////////////////
     private RecognitionListener listener = new RecognitionListener() {
         @Override
@@ -557,5 +629,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
 }

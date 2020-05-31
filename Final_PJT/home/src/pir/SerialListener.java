@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-//ÀÌº¥Æ®¿¡ ´ëÇØ¼­ Ã³¸®ÇÏ´Â ¸®½º³ÊÅ¬·¡½º
-//½Ã¸®¾óÆ÷Æ®·Î µ¥ÀÌÅÍ°¡ Àü¼ÛµÉ¶§¸¶´Ù ÀÌº¥Æ®°¡ ¹ß»ıÇÏ°í ÀÌº¥Æ®°¡ ¹ß»ıµÉ¶§ µ¥ÀÌÅÍ¸¦ ÀĞ±â
+//ì´ë²¤íŠ¸ì— ëŒ€í•´ì„œ ì²˜ë¦¬í•˜ëŠ” ë¦¬ìŠ¤ë„ˆí´ë˜ìŠ¤
+//ì‹œë¦¬ì–¼í¬íŠ¸ë¡œ ë°ì´í„°ê°€ ì „ì†¡ë ë•Œë§ˆë‹¤ ì´ë²¤íŠ¸ê°€ ë°œìƒí•˜ê³  ì´ë²¤íŠ¸ê°€ ë°œìƒë ë•Œ ë°ì´í„°ë¥¼ ì½ê¸°
 public class SerialListener  implements SerialPortEventListener{
 	private InputStream in;
 	private OutputStream out;
@@ -21,29 +21,25 @@ public class SerialListener  implements SerialPortEventListener{
 		this.out = out;
 		this.homeId = homeId;
 	}
-	//ÀÌº¥Æ®°¡ ¹ß»ıÇÒ¶§¸¶´Ù È£ÃâµÇ´Â ¸Ş¼Òµå
-	//¹ß»ıÇÑ ÀÌº¥Æ®ÀÇ Á¤º¸¸¦ ´ã°í ÀÖ´Â °´Ã¼ - SerialPortEvent
+	//ì´ë²¤íŠ¸ê°€ ë°œìƒí• ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
+	//ë°œìƒí•œ ì´ë²¤íŠ¸ì˜ ì •ë³´ë¥¼ ë‹´ê³  ìˆëŠ” ê°ì²´ - SerialPortEvent
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		//Àü¼ÛµÈ µ¥ÀÌÅÍ°¡ ÀÖ´Â °æ¿ì µ¥ÀÌÅÍ¸¦ ÀĞ¾î¼­ ÄÜ¼Ö¿¡ Ãâ·Â
+		//ì „ì†¡ëœ ë°ì´í„°ê°€ ìˆëŠ” ê²½ìš° ë°ì´í„°ë¥¼ ì½ì–´ì„œ ì½˜ì†”ì— ì¶œë ¥
 		if(event.getEventType()==SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				//Àü¼ÛµÇ´Â µ¥ÀÌÅÍÀÇ Å©±â¸¦ ÃßÃâ
+				//ì „ì†¡ë˜ëŠ” ë°ì´í„°ì˜ í¬ê¸°ë¥¼ ì¶”ì¶œ
 				int check_size = in.available();
-				byte[] data = new byte[check_size];
+				byte[] data = new byte[check_size];		
+				
 				in.read(data,0,check_size);
 				String msg = new String(data);
-				System.out.println("¹ŞÀº µ¥ÀÌÅÍ:"+msg);
+				System.out.println("ë°›ì€ ë°ì´í„°:"+msg);
 				pw = new PrintWriter(out);
-				if(msg.trim().equals("on")) {
-					System.out.println("if¹® µé¾î¿È");
-					pw.println("job/"+msg+","+"on/"+"home/"+homeId);
-					System.out.println("job/"+msg+","+"on/"+"home/"+homeId);
-					pw.flush();
+				if(msg.trim().equals("pirLed/on")) {
+					pw.println(msg.trim()+","+"on/"+"home/"+homeId);
 				}else {
-					pw.println("job/"+msg+","+"off/"+"home/"+homeId);
-					System.out.println("job/"+msg+","+"on/"+"home/"+homeId);
-					pw.flush();
+					pw.println(msg.trim()+","+"off/"+"home/"+homeId);
 				}
 				/*if(msg!=""&msg!="\n") {
 					pw.println("job/"+msg+"/"+"home/"+homeId);
