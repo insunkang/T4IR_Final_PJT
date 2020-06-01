@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.android.car.Car;
+import com.example.android.home.HomeControlActivity;
 import com.example.android.member.MemberVO;
 import com.google.gson.Gson;
 
@@ -85,6 +86,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        main_home_img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(loginID!=null){
+                    startActivity(intentHome);
+                }else{
+                    Toast.makeText(MainActivity.this, "로그인 할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         btn_login_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,10 +114,12 @@ public class MainActivity extends AppCompatActivity {
                     SystemClock.sleep(10);
                     res= task.getResponse();
                     count ++;
+
                     if(count>300){
                         Toast.makeText(MainActivity.this, "ID,PASSWORD를 확인하세요.", Toast.LENGTH_SHORT).show();
                         break;
                     }
+
                 }
                 if(res!=""||res!=null) {
                     Log.d("check1",res);
@@ -123,6 +136,9 @@ public class MainActivity extends AppCompatActivity {
                         intentCar = new Intent(MainActivity.this, Car.class);
                         intentCar.putExtra("loginID", loginID);
                         intentCar.putExtra("member_family", member_family);
+                        intentHome = new Intent(MainActivity.this, HomeControlActivity.class);
+                        intentHome.putExtra("loginID", loginID);
+                        intentHome.putExtra("member_family", member_family);
                         Toast.makeText(MainActivity.this, "로그인이 되었습니다.", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(MainActivity.this, "로그인에 실패하였습니다.", Toast.LENGTH_LONG).show();
@@ -179,13 +195,6 @@ public class MainActivity extends AppCompatActivity {
             }
             return data;
         }
-        /*main_home_img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),HomeControlActivity.class);
-                startActivity(intent);
-            }
-        });*/
 
     }
 

@@ -2,7 +2,6 @@ package com.example.android.home.light;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -10,8 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.R;
-import com.example.android.home.HomeControlActivity;
-import com.example.android.home.security.MyService2;
+import com.example.android.home.alarms.AlarmsService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,7 +33,7 @@ public class LightControlActivity extends AppCompatActivity {
     SeekBar K_seekBar;
     TextView L_txtValue;
     TextView K_txtValue;
-    String androidId = MyService2.androidId;
+    String androidId = AlarmsService.androidId;
     Thread t1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,13 +129,10 @@ public class LightControlActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Integer... integers) {
 
-            //androidId = "1111";
-            socket = MyService2.socket;
-            //socket = new Socket("70.12.116.75", 12345);
+            socket = AlarmsService.socket;
             if (socket != null) {
                 ioWork();
             }
-            //서버에서 전달되는 메시지를 읽는 쓰레드
             t1 = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -157,21 +152,16 @@ public class LightControlActivity extends AppCompatActivity {
         }
 
         void ioWork(){
-            is = MyService2.iowork.getIs();
-            isr = MyService2.iowork.getIsr();
-            br = MyService2.iowork.getBr();
-
-            os = MyService2.iowork.getOs();
-            pw = MyService2.iowork.getPw();
-            //pw.println("phone/"+androidId);
-            //pw.flush();
-
+            is = AlarmsService.iowork.getIs();
+            isr = AlarmsService.iowork.getIsr();
+            br = AlarmsService.iowork.getBr();
+            os = AlarmsService.iowork.getOs();
+            pw = AlarmsService.iowork.getPw();
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //t1.interrupt();
     }
 }

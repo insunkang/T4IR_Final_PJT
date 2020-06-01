@@ -14,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.R;
 import com.example.android.home.HomeControlActivity;
-import com.example.android.home.security.MyService2;
+import com.example.android.home.alarms.AlarmsService;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,7 +29,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 
-public class AirControlActivity extends AppCompatActivity {
+public class  AirControlActivity extends AppCompatActivity {
     AsyncTaskExam asyncTaskExam;
     InputStream is;
     InputStreamReader isr;
@@ -36,7 +37,7 @@ public class AirControlActivity extends AppCompatActivity {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
-    String androidId = MyService2.androidId;
+    String androidId = AlarmsService.androidId;
     Thread t1;
     private Spinner T_spinner;
     ArrayList<Integer> arrayList;
@@ -48,12 +49,10 @@ public class AirControlActivity extends AppCompatActivity {
         setContentView(R.layout.activity_air_control);
         asyncTaskExam = new AsyncTaskExam();
         asyncTaskExam.execute(10, 20);
-
         arrayList = new ArrayList<>();
         for (int i = 10; i <= 30; i++) {
             arrayList.add(i);
         }
-
         arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 arrayList);
@@ -72,8 +71,8 @@ public class AirControlActivity extends AppCompatActivity {
                     public void run() {
                         String message = "";
                         message = "FAN_auto";
-                        pw.println("air/"+message+"/"+"phone/"+androidId);
-                        pw.println("air/"+num+"/"+"phone/"+androidId);
+                        pw.println("air/"+message+"/"+"phone/"+ androidId);
+                        pw.println("air/"+num+"/"+"phone/" + androidId);
                     }
                 }).start();
             }
@@ -92,13 +91,13 @@ public class AirControlActivity extends AppCompatActivity {
             public void run() {
                 if (view.getId() == R.id.btn_A_auto) {
                     message = "FAN_auto";
-                    pw.println("air/"+message+"/"+"phone/"+androidId);
+                    pw.println("air/"+message+"/"+"phone/" + androidId);
                 } else if (view.getId() == R.id.btn_A_on) {
                     message = "FAN_on";
-                    pw.println("air/"+message+"/"+"phone/"+androidId);
+                    pw.println("air/"+message+"/"+"phone/" + androidId);
                 } else if (view.getId() == R.id.btn_A_off) {
                     message = "FAN_off";
-                    pw.println("air/"+message+"/"+"phone/"+androidId);
+                    pw.println("air/"+message+"/"+"phone/" + androidId);
                 }
             }
         }).start();
@@ -111,15 +110,13 @@ public class AirControlActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(Integer... integers) {
 
-            socket = MyService2.socket;
+            socket = AlarmsService.socket;
             if (socket != null) {
                 ioWork();
             }
-            //서버에서 전달되는 메시지를 읽는 쓰레드
             t1 = new Thread(new Runnable() {
                 @Override
                 public void run() {
-
                     while (!t1.isInterrupted()) {
                         String msg = "";
                         try {
@@ -140,15 +137,11 @@ public class AirControlActivity extends AppCompatActivity {
         }
 
         void ioWork(){
-            is = MyService2.iowork.getIs();
-            isr = MyService2.iowork.getIsr();
-            br = MyService2.iowork.getBr();
-
-            os = MyService2.iowork.getOs();
-            pw = MyService2.iowork.getPw();
-            //pw.println("phone/"+androidId);
-            //pw.flush();
-
+            is = AlarmsService.iowork.getIs();
+            isr = AlarmsService.iowork.getIsr();
+            br = AlarmsService.iowork.getBr();
+            os = AlarmsService.iowork.getOs();
+            pw = AlarmsService.iowork.getPw();
         }
 
         private void filteringMsg(String msg) {
@@ -158,11 +151,8 @@ public class AirControlActivity extends AppCompatActivity {
                 String msg2 = token.nextToken();
                 String msg3 = token.nextToken();
                 String msg4 = token.nextToken();
-                //if(msg1.equals("temperature")){
-                    temperature = msg2;
-                //} else{
-                    humidity = msg4;
-                //}
+                temperature = msg2;
+                humidity = msg4;
                 publishProgress();
             } catch (NoSuchElementException e) {
             }
@@ -178,10 +168,10 @@ public class AirControlActivity extends AppCompatActivity {
 
     }
 
-    /*@Override
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        try {
+        /*try {
             is.close();
             isr.close();
             br.close();
@@ -190,8 +180,8 @@ public class AirControlActivity extends AppCompatActivity {
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         t1.interrupt();
         Log.d("check1", Thread.activeCount() + "");
-    }*/
+    }
 }
