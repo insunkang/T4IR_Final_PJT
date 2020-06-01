@@ -564,7 +564,8 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                socket = new Socket("70.12.227.93", 12345);
+                socket = new Socket("70.12.224.117", 12345);
+
                 Log.d("확인", "socket다음");
                 if (socket != null) {
                     speechWork(strings[0], strings[1]);

@@ -1,6 +1,7 @@
 package com.example.android.car;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -61,6 +62,10 @@ public class carMap extends Fragment {
     ListView listView;
     TMapPoint start, end;
     TMapPoint setNavi;
+    Car car;
+    String firstLAT ;
+    String firstLON ;
+    NaviAsyncTask naviAsyncTask;
 
 
 
@@ -81,7 +86,8 @@ public class carMap extends Fragment {
         } else {
             final Button button; // 길찾기
             Button btn; // 목적지설정
-
+            firstLAT = car.LAT;
+            firstLON = car.LON;
             final View rootView = inflater.inflate(R.layout.fragment_car_map, container, false);
             keywordView = rootView.findViewById(R.id.edit_keyword);
 
@@ -93,7 +99,7 @@ public class carMap extends Fragment {
             //tMapGpsManager.setProvider(tMapGpsManager.NETWORK_PROVIDER);
             tMapGpsManager.setProvider(tMapGpsManager.GPS_PROVIDER);
             tMapGpsManager.OpenGps();
-            TMapPoint point = tMapGpsManager.getLocation();
+            final TMapPoint point = tMapGpsManager.getLocation();
             tMapView.setIconVisibility(true);
             tMapView.setSightVisible(true);
             tMapView.setMapPosition(TMapView.POSITION_NAVI);
@@ -108,6 +114,7 @@ public class carMap extends Fragment {
             mAdapter = new ArrayAdapter<POI>(getActivity(), android.R.layout.simple_list_item_1);
             ArrayList<TMapPoint> alTMapPoint = new ArrayList<TMapPoint>();
             listView.setAdapter(mAdapter);
+
 
             LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
             LocationListener locationListener = new LocationListener() {
@@ -146,7 +153,7 @@ public class carMap extends Fragment {
                 @Override
                 public void onCalloutRightButton(TMapMarkerItem tMapMarkerItem) {
                     String message = null;
-
+                    Log.d("catch",car.LAT);
                     start = tMapMarkerItem.getTMapPoint();
                     setNavi = tMapMarkerItem.getTMapPoint();
 
@@ -183,6 +190,7 @@ public class carMap extends Fragment {
                         start = end = null;
                     }else{
                         Toast.makeText(getActivity(),"start or end is null", Toast.LENGTH_SHORT).show();
+
                     }
 
                 }
@@ -218,7 +226,6 @@ public class carMap extends Fragment {
 //            button.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {
-//
 //                    naviAsyncTask.execute();
 //                    button.setEnabled(false);
 //                }
@@ -252,14 +259,99 @@ public class carMap extends Fragment {
 //                    }
 //                }
 //            });
+//            button = rootView.findViewById(R.id.startFirstNavi);
+//            button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    final TMapPoint point = tMapGpsManager.getLocation();
+//                        final TMapPoint tMapPointEnd = new TMapPoint(Double.parseDouble(car.LAT),Double.parseDouble(car.LON));
+//                        searchRoute(point,tMapPointEnd);
+//                        getActivity().runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                try {
+//                                    TMapPolyLine tMapPolyLine = new TMapData().findPathData(tMapPointEnd, point);
+//                                    tMapPolyLine.setLineColor(Color.BLUE);
+//                                    tMapPolyLine.setLineWidth(2);
+//                                    tMapView.addTMapPolyLine("Line1", tMapPolyLine);
+//
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                }
+//            });
 
+            final TextView mycarLATText = rootView.findViewById(R.id.startFirstNaviLAT);
+            final TextView mycarLONText = rootView.findViewById(R.id.startFirstNaviLON);
+            Log.d("catch", (String) mycarLATText.getText());
+            Log.d("catch", (String) mycarLONText.getText());
+            String lastTEXTLAN = (String) mycarLATText.getText();
+            String lastTEXTLON = (String) mycarLONText.getText();
+            Log.d("catch", lastTEXTLAN);
+            Log.d("catch", lastTEXTLON);
+            final String mycarLATStr = lastTEXTLAN;
+            final String mycarLONStr = lastTEXTLON;
+
+        //    final TMapPoint myCarLoc = new TMapPoint(37.570841,126.985302);
+         /*   getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("catch", (String) mycarLATText.getText());
+                    Log.d("catch", (String) mycarLONText.getText());
+                    TMapPoint myCarLoc = new TMapPoint(Double.parseDouble((String) mycarLATText.getText()),Double.parseDouble((String) mycarLONText.getText()));
+                    searchRoute(point, myCarLoc);
+                }
+            });*/
+
+
+            button = rootView.findViewById(R.id.startFirstNavi);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("catch", (String) mycarLATText.getText());
+                    Log.d("catch", (String) mycarLONText.getText());
+//                    Double a = Double.parseDouble((String) mycarLATText.getText());
+//                    Double b = Double.parseDouble((String) mycarLONText.getText());
+                    TMapPoint myCarLoc = new TMapPoint(Double.parseDouble((String) mycarLATText.getText()),Double.parseDouble((String) mycarLONText.getText()));
+                    TMapPoint point = tMapGpsManager.getLocation();
+
+
+                    searchRoute(point, myCarLoc);
+                }
+
+            });
+
+
+            //button.callOnClick();
+          /*  getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    button.callOnClick();
+
+
+                }
+            });*/
 
             mapView.addView(tMapView);
             return rootView;
 
         }
     }
+   /* @Override
+    public void onResume() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Button button = getActivity().findViewById(R.id.startFirstNavi);
+                button.callOnClick();
 
+
+            }
+        });
+        super.onResume();
+    }*/
     //==================검색기능=============================
     private void searchPOI() {
         TMapData data = new TMapData();
@@ -392,7 +484,14 @@ public class carMap extends Fragment {
             while (isRunning) {
                 SystemClock.sleep(10000);
                 TMapPoint point = tMapGpsManager.getLocation();
-                TMapPoint tMapPointEnd = new TMapPoint(37.570841, 126.985302); // SKT타워(출발지)
+                @SuppressLint("ResourceType") String startfirstnavilatitude = (String) getText(R.id.startFirstNaviLAT);
+                @SuppressLint("ResourceType") String startfirstnavilongitude = (String) getText(R.id.startFirstNaviLON);
+
+
+                Double lastLat = Double.parseDouble(startfirstnavilatitude);
+                Double lastLong = Double.parseDouble(startfirstnavilongitude);
+                TMapPoint tMapPointEnd = new TMapPoint(lastLat,lastLong);
+                //TMapPoint tMapPointEnd = new TMapPoint(37.570841, 126.985302); // SKT타워(출발지)
                 Log.d("check", "여기");
                 publishProgress(point);
                 try {
@@ -405,7 +504,7 @@ public class carMap extends Fragment {
                     e.printStackTrace();
                 }
                 //리턴은 한번만 경로호출을 한번만 실행할 때 활성화;
-                return String.valueOf(a);
+                //return String.valueOf(a);
             }
             return String.valueOf(a);
         }
