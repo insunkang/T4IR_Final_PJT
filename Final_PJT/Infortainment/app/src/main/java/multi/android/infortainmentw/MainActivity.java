@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             final FragmentManager fragmentManager;
 
             fragmentManager = getSupportFragmentManager();
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
 
                     TextView tvTemp = findViewById(R.id.temporature);
                     TextView tvHumi = findViewById(R.id.humidity);
-                    tvTemp.setText(temporature + "℃");
+                    tvTemp.setText(temperature + "℃");
                     tvHumi.setText(humidity + "％");
                     TextView a = findViewById(R.id.a);
                     TextView b = findViewById(R.id.b);
