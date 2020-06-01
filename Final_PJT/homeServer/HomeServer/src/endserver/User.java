@@ -1,4 +1,4 @@
-package backup;
+package endserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -104,10 +104,10 @@ public class User extends Thread {
 						userclient = homelist.get(id);
 					}
 					if (category.equals("home")) {
-						//userclient = userlist.get(id);
-						for (int i = 0; i < userlist.size(); i++) {
-							userlist.get(i).sendMsg(message);
-						}
+						userclient = userlist.get(id);
+					}
+					if (userclient != null) {
+						userclient.sendMsg(message);
 					}
 					/*if (userclient != null) {
 						userclient.sendMsg(message);
@@ -135,7 +135,7 @@ public class User extends Thread {
 				}
 				
 				//온습도 제어(라떼 > 서버)
-				if (protocol.equals("pan")) {
+				if (protocol.equals("fan")) {
 					// 여기에서 클라이언트에게 메시지를 전달합니다.
 					String message = st.nextToken();
 					String category = st.nextToken();
@@ -163,6 +163,41 @@ public class User extends Thread {
 					String id = st.nextToken();
 					System.out.println(message + ":" + category + ":" + id);
 					// 서버에서 클라이언트의 메시지를 분석해서 메시지를 전달할 클라이언트를 정의
+					User userclient = null;
+					if (category.equals("phone")) {
+						userclient = homelist.get(id);
+					}
+					if (category.equals("home")) {
+						userclient = userlist.get(id);
+					}
+					if (userclient != null) {
+						userclient.sendMsg(message);
+					}
+				}
+				
+				if(protocol.equals("flame")) {
+					// 여기에서 클라이언트에게 메시지를 전달합니다.
+					String message = st.nextToken();
+					String category = st.nextToken();
+					String id = st.nextToken();
+					System.out.println(message + ":" + category + ":" + id);
+					User userclient = null;
+					if (category.equals("phone")) {
+						userclient = homelist.get(id);
+					}
+					if (category.equals("home")) {
+						userclient = userlist.get(id);
+					}
+					if (userclient != null) {
+						userclient.sendMsg(message);
+					}
+				}
+				if(protocol.equals("gas")) {
+					// 여기에서 클라이언트에게 메시지를 전달합니다.
+					String message = st.nextToken();
+					String category = st.nextToken();
+					String id = st.nextToken();
+					System.out.println(message + ":" + category + ":" + id);
 					User userclient = null;
 					if (category.equals("phone")) {
 						userclient = homelist.get(id);
