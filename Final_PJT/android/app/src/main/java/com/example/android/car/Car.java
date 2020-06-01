@@ -129,8 +129,6 @@ public class Car extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(car_lock.isChecked()){
-                    stateTask = new StateTask();
-                    stateTask.execute(10, 20);
                     car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_open));
                     Toast.makeText(Car.this,"UNLOCK",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/engineOn");

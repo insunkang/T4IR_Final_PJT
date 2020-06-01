@@ -144,8 +144,8 @@ public class NaviFragment extends Fragment {
                     longitude = location.getLongitude();
 
 
-                    boolean isTracking = tMapView.getIsTracking();
-                    if (isTracking == true) {
+//                    boolean isTracking = tMapView.getIsTracking();
+////                    if (isTracking == true) {
                         tMapView.setLocationPoint(longitude, latitude);
                         tMapView.setMapPosition(TMapView.POSITION_DEFAULT);
 //                        getActivity().runOnUiThread(new Runnable() {
@@ -156,7 +156,7 @@ public class NaviFragment extends Fragment {
 //                            }
 //                        });
 
-                    }
+
 
                 }
 
