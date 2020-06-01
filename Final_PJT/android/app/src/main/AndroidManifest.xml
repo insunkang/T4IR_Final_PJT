@@ -31,8 +31,7 @@
         <activity
             android:name=".driving.Driving"
             android:configChanges="screenSize|orientation" />
-        <activity android:name=".home.security.NotiActivity" />      
-        <activity android:name=".home.security.PopupActivity" android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".home.alarms.PopupActivity" android:theme="@android:style/Theme.Dialog" />
 
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -47,13 +46,10 @@
             android:value="AIzaSyCPym8BlOiqzYuhwElya63AaS5miu29frM" />
 
         <service
-            android:name=".home.security.MyService3"
+            android:name=".home.alarms.AlarmsService"
             android:enabled="true"
             android:exported="true" />
-        <service
-            android:name=".home.security.MyService2"
-            android:enabled="true"
-            android:exported="true" />
+
     </application>
 
 </manifest>
