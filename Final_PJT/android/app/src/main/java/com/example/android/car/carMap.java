@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.MainActivity;
 import com.example.android.R;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
@@ -78,11 +79,8 @@ public class carMap extends Fragment {
             return view;
 
         } else {
-          //  final NaviAsyncTask naviAsyncTask = new NaviAsyncTask();
             final Button button; // 길찾기
             Button btn; // 목적지설정
-
-
 
             final View rootView = inflater.inflate(R.layout.fragment_car_map, container, false);
             keywordView = rootView.findViewById(R.id.edit_keyword);
@@ -107,15 +105,9 @@ public class carMap extends Fragment {
             tMapView.setTrackingMode(true);
             mContext = getContext();
             listView = rootView.findViewById(R.id.listView);
-
             mAdapter = new ArrayAdapter<POI>(getActivity(), android.R.layout.simple_list_item_1);
             ArrayList<TMapPoint> alTMapPoint = new ArrayList<TMapPoint>();
             listView.setAdapter(mAdapter);
-
-//            StartPointListener startPointListener = new StartPointListener();
-//
-//
-//            listView.setOnItemClickListener(startPointListener);
 
             LocationManager locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
             LocationListener locationListener = new LocationListener() {
@@ -126,13 +118,7 @@ public class carMap extends Fragment {
                     double tempLongitude = longitude;
                     latitude = location.getLatitude();
                     longitude = location.getLongitude();
-                    /*
-                    double s = Math.acos(Math.cos(Math.toRadians(90 - tempLatitude)) * Math.cos(Math.toRadians(90 - latitude)) + Math.sin(Math.toRadians(90 - tempLatitude)) * Math.sin(Math.toRadians(90 - latitude)) * Math.cos(Math.toRadians(tempLongitude - longitude))) * 6378.137;
-                    if (s * 3600 > 60000 || s==0.0) {
 
-                    } else {
-                        Log.d("logCheck1", (s * 3600) + "");
-                    }*/
 //                    boolean isTracking = tMapView.getIsTracking();
 //                    if (isTracking==true) {
                         tMapView.setLocationPoint(longitude, latitude);
@@ -178,7 +164,7 @@ public class carMap extends Fragment {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
-                                Car.pw.println("start/"+setNavi.getLongitude()+","+setNavi.getLatitude());
+                                Car.pw.println(MainActivity.member_family+"/"+MainActivity.loginID+"/"+"start/"+setNavi.getLongitude()+","+setNavi.getLatitude());
                                 Car.pw.flush();
                             }
                         }).start();

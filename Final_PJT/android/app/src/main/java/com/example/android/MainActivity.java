@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
                 if(res!=""||res!=null) {
+
                     Log.d("check1",res);
                     Gson gson = new Gson();
                     MemberVO fvo = gson.fromJson(res, MemberVO.class);

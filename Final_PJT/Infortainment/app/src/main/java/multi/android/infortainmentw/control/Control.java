@@ -156,7 +156,7 @@ public class Control extends Fragment {
                     tvKm.setTextColor(Color.rgb(255, 255, 255));
                     tvKm.setText(Math.round(km) + " m");
                     delay++;
-                    if(delay>3) {
+                    if(delay>5) {
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
