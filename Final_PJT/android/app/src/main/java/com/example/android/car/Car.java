@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.androdocs.httprequest.HttpRequest;
 import com.example.android.R;
+import com.example.android.Variable;
 import com.example.android.driving.Driving_Info;
 import com.example.android.member.MemberVO;
 import com.google.gson.Gson;
@@ -69,13 +70,7 @@ public class Car extends AppCompatActivity {
     ImageView car_seat;
     TextView edit_oil;
     ProgressBar progressBar;
-    InputStream is;
-    InputStreamReader isr;
-    BufferedReader br;
-    Socket socket;
-    OutputStream os;
-     public static PrintWriter pw;
-
+    MemberVO fvo;
     /* ==========================날씨========================== */
     String CITY = "seoul,KR";
     private static String API = "1d05f37dc31eab19ba9ee3c97411cf25";
@@ -99,7 +94,6 @@ public class Car extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
 
-        pw.println("login/good");
         carMap carMap = new carMap();
         FragmentManager fragmentManager;
         fragmentManager = getSupportFragmentManager();
@@ -107,13 +101,9 @@ public class Car extends AppCompatActivity {
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.car_map, carMap);
         transaction.commit();
-        MapAsyncTask mapAsyncTask = new MapAsyncTask();
-        mapAsyncTask.execute(10,20);
-
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
 
         car_handle_img = findViewById(R.id.car_handle_img);
         car_lock = findViewById(R.id.car_lock);
@@ -128,18 +118,19 @@ public class Car extends AppCompatActivity {
         edit_oil.setText("100");
         progressBar.setProgress(Integer.parseInt(edit_oil.getText().toString()));
 
-
         Bundle extras = getIntent().getExtras();
         loginID = extras.getString("loginID");
         member_family = extras.getString("member_family");
         Log.d("msg","로그인 아이디:::"+loginID);
         Log.d("msg","해당 fam:::"+member_family);
 
-
+        //시동 버튼 눌렀을 때
         car_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(car_lock.isChecked()){
+                    stateTask = new StateTask();
+                    stateTask.execute(10, 20);
                     car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_open));
                     Toast.makeText(Car.this,"UNLOCK",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/engineOn");
@@ -151,10 +142,16 @@ public class Car extends AppCompatActivity {
                 }
             }
         });
-
+        //에어컨 버튼 눌렀을 때
         car_air.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                carStateTask = new stateSelect();
+                MemberVO vo = new MemberVO(loginID);
+                carStateTask.execute(vo);
+                while(carStateTask.getResponse().equals("")){
+                    SystemClock.sleep(10);
+                }
                 Gson gson = new Gson();
                 MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
                 String arr[] = fvo.getMember_car_state().split("/");
@@ -171,7 +168,7 @@ public class Car extends AppCompatActivity {
                 }
             }
         });
-
+        //시트 버튼 눌렀을 때
         car_seat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -182,10 +179,8 @@ public class Car extends AppCompatActivity {
                         publishProgress();
                         SystemClock.sleep(1000);
                         publishProgress();
-
                         return null;
                     }
-
                     @Override
                     protected void onProgressUpdate(String... values) {
                         super.onProgressUpdate(values);
@@ -195,7 +190,6 @@ public class Car extends AppCompatActivity {
                             car_seat.setVisibility(View.VISIBLE);
                         }
                     }
-
                     @Override
                     protected void onPostExecute(String s) {
                         super.onPostExecute(s);
@@ -213,10 +207,9 @@ public class Car extends AppCompatActivity {
                         pw.println(member_family+"/"+loginID+"/control/seatSetting/"+seat);
                     }
                 }.execute();
-
             }
         });
-
+        //운전하기 버튼 눌렀을 때
         car_handle_img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -245,7 +238,12 @@ public class Car extends AppCompatActivity {
             SystemClock.sleep(10);
         }
         Gson gson = new Gson();
-        MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+        fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+
+        Log.d("check1",carStateTask.getResponse());
+        if(fvo.getMember_car_state()==null){
+            fvo.setMember_car_state("airconditioner/0/seat/0/lat/37.4990887607019/lon/127.01712430744908");
+        }
         String arr[] = fvo.getMember_car_state().split("/");
         LAT = arr[5];
         LON = arr[7];
@@ -268,7 +266,6 @@ public class Car extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             /* Showing the ProgressBar, Making the main design GONE */
             //findViewById(R.id.loader).setVisibility(View.VISIBLE);
             //findViewById(R.id.mainContainer).setVisibility(View.GONE);
@@ -284,8 +281,6 @@ public class Car extends AppCompatActivity {
             }else{
                 response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?lat=" + LAT + "&lon=" + LON + "&units=metric&appid=" + API);
             }
-
-
             return response;
         }
 
@@ -297,21 +292,16 @@ public class Car extends AppCompatActivity {
                 JSONObject sys = jsonObj.getJSONObject("sys");
                 JSONObject wind = jsonObj.getJSONObject("wind");
                 JSONObject weather = jsonObj.getJSONArray("weather").getJSONObject(0);
-
                 Long updatedAt = jsonObj.getLong("dt");
                 String updatedAtText = "Updated at: " + new SimpleDateFormat("yyyy/MM/dd hh:mm a", Locale.ENGLISH).format(new Date(updatedAt * 1000));
                 String temp = main.getString("temp") + "°C";
                 String pressure = main.getString("pressure");
                 String humidity = main.getString("humidity");
-
                 Long sunrise = sys.getLong("sunrise");
                 Long sunset = sys.getLong("sunset");
                 String windSpeed = wind.getString("speed");
                 String weatherDescription = weather.getString("description");
-
                 String address = jsonObj.getString("name") + ", " + sys.getString("country");
-
-
                 /* Populating extracted data into our views */
                 addressTxt.setText(address);
                 updated_atTxt.setText(updatedAtText);
@@ -322,31 +312,22 @@ public class Car extends AppCompatActivity {
                 windTxt.setText(windSpeed);
                 pressureTxt.setText(pressure);
                 humidityTxt.setText(humidity);
-
                 /* Views populated, Hiding the loader, Showing the main design */
                 //findViewById(R.id.loader).setVisibility(View.GONE);
                 //findViewById(R.id.mainContainer).setVisibility(View.VISIBLE);
-
-
             } catch (JSONException e) {
                 //findViewById(R.id.loader).setVisibility(View.GONE);
                 //findViewById(R.id.errorText).setVisibility(View.VISIBLE);
             }
-
         }
-
     }
-    class MapAsyncTask extends AsyncTask<Integer,String,String> {
-
+    class StateTask extends AsyncTask<Integer,String,String> {
+        String lon="";
+        String lat="";
         @Override
         protected String doInBackground(Integer... integers) {
-            Log.d("chat", "접속"
-                    );
             try {
-
-                //socket = new Socket("70.12.228.112", 12345);
-                //socket = new Socket("70.12.225.188", 33334);
-                socket = new Socket("70.12.224.148", 33334);
+                socket = new Socket(Variable.carServerIP, 33334);
                 if (socket != null) {
                     ioWork();
                 }
@@ -358,6 +339,9 @@ public class Car extends AppCompatActivity {
                             String msg;
                             try {
                                 msg = br.readLine();
+                                if(msg==null){
+                                    continue;
+                                }
                                 Log.d("chat", "서버로 부터 수신된 메시지>>"
                                         + msg);
                                 filteringMsg(msg);
@@ -380,47 +364,17 @@ public class Car extends AppCompatActivity {
                 is = socket.getInputStream();
                 isr = new InputStreamReader(is);
                 br = new BufferedReader(isr);
-
                 os = socket.getOutputStream();
                 pw = new PrintWriter(os,true);
+                pw.println(member_family+"/"+loginID);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        String lon = null;
-        String lat = null;
-        private void filteringMsg(String msg) {
-            try {
-                StringTokenizer token = new StringTokenizer(msg, "/");
-                String protocol = token.nextToken();
-                String message = token.nextToken();
 
-                System.out.println("프로토콜:" + protocol + ",메시지:" + message);
-                 if(protocol.equals("start")){
-                    String[] longlat = message.split(",");
-                    lon = longlat[0];
-                    lat = longlat[1];
-                    Log.d("chat",lon+lat);
-                    publishProgress(lon,lat);
-
-
-
-
-                    Log.d("chat","protocolstart");
-                }else if(protocol.equals("sendGPS")){
-                     String[] longlat = message.split(",");
-                     lon = longlat[0];
-                     lat = longlat[1];
-                     Log.d("chat",lon+lat);
-                     publishProgress(lon,lat);
-                 }
-            } catch (NoSuchElementException e) {
-
-            }
-        }
         @Override
         protected void onProgressUpdate(String... values) {
-
+            super.onProgressUpdate(values);
             TextView lo = findViewById(R.id.lo);
             TextView la = findViewById(R.id.la);
             lo.setText(lon);
@@ -429,65 +383,11 @@ public class Car extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
                     button.callOnClick();
-
                 }
             });
-
-
         }
-    }
 
-    class StateTask extends AsyncTask<Integer,String,String> {
-        @Override
-        protected String doInBackground(Integer... integers) {
-            try {
-
-                //socket = new Socket("70.12.228.112", 12345);
-                //socket = new Socket("70.12.225.188", 33334);
-                socket = new Socket("70.12.224.117", 33334);
-                if (socket != null) {
-                    ioWork();
-                }
-                //서버에서 전달되는 메시지를 읽는 쓰레드
-                Thread t1 = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        while (true) {
-                            String msg;
-                            try {
-                                msg = br.readLine();
-                                Log.d("chat", "서버로 부터 수신된 메시지>>"
-                                        + msg);
-                                filteringMsg(msg);
-                            } catch (IOException e) {
-
-                            }
-                        }
-                    }
-                });
-                t1.start();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return "";
-        }
-        void ioWork(){
-            try {
-                is = socket.getInputStream();
-                isr = new InputStreamReader(is);
-                br = new BufferedReader(isr);
-
-                os = socket.getOutputStream();
-                pw = new PrintWriter(os,true);
-                pw.println(member_family+"/"+loginID);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         void filteringMsg(String Msg){
             StringTokenizer st = new StringTokenizer(Msg,"/");
             String protocol = st.nextToken();
@@ -500,12 +400,24 @@ public class Car extends AppCompatActivity {
                         edit_oil.setText(message+"%");
                     }
                 });
+            }else if(protocol.equals("start")){
+                String[] longlat = message.split(",");
+                lon = longlat[0];
+                lat = longlat[1];
+                Log.d("chat",lon+lat);
+                publishProgress(lon,lat);
+                Log.d("chat","protocolstart");
+            }else if(protocol.equals("sendGPS")){
+                String[] longlat = message.split(",");
+                lon = longlat[0];
+                lat = longlat[1];
+                Log.d("chat",lon+lat);
+                publishProgress(lon,lat);
             }
+
         }
     }
-
-
-
+    // 상태값 조회 - 스프링으로 연결
     class stateSelect extends AsyncTask<MemberVO, Void, String> {
         URL url = null;
         BufferedReader br = null;
@@ -517,7 +429,7 @@ public class Car extends AppCompatActivity {
             try {
                 object.put("member_id", items[0].getMember_id());
 
-                String path = "http://70.12.230.200:8088/miri/state/select";
+                String path = "http://"+Variable.carServerIP+":8088/miri/state/select";
                 url = new URL(path);
 
                 OkHttpClient client = new OkHttpClient();

@@ -35,6 +35,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
@@ -53,13 +54,16 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import multi.android.infortainmentw.control.Control;
+import multi.android.infortainmentw.db.Task;
 import multi.android.infortainmentw.music.MusicFragment;
 import multi.android.infortainmentw.music.PlayFragment;
 import multi.android.infortainmentw.navi.FindAddress;
@@ -74,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
     MusicFragment musicFragment = new MusicFragment();
     FindAddress findAddress = new FindAddress();
     NaviFragment naviFragment = new NaviFragment();
-    PlayFragment playFragment=new PlayFragment();
+    PlayFragment playFragment = new PlayFragment();
     NaviMain naviMain = new NaviMain();
     // =================================
     // 소켓, 입출력변수
@@ -85,31 +89,27 @@ public class MainActivity extends AppCompatActivity {
     OutputStream os;
     public static PrintWriter pw;
 
-    String lon;
-    String lat;
-   // String ip = "70.12.224.148";
-    //int port = 33336;
     Button btn;
     TMapGpsManager tMapGpsManager;
 
-    String ip = "70.12.224.117";
+    String ip = Variable.tcpIP;
     int port = 33336;
+    public static String andId; // 로그인
+    public static String family;
+    //지도에 필요한 변수
+    String lon = "";
+    String lat = "";
 
-    String andId;
 
     //음성 인식추가
     Context cThis;
     String LogTT = "[STT]";
-
     Intent SttIntent;
     SpeechRecognizer mRecognizer;
-
     TextToSpeech tts;
-
     Button btnSttStart;
     EditText txtInMsg;
     EditText txtSystem;
-
     SpeechAsyncTast speechAsyncTast;
 
 
@@ -117,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        andId = intent.getStringExtra("id");
+        family = intent.getStringExtra("family");
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -157,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
             mRecognizer = SpeechRecognizer.createSpeechRecognizer(cThis);
             mRecognizer.setRecognitionListener(listener);
 
-            andId="noo";
 
             //음성 출력 생성, 리스너 초기화
             tts = new TextToSpeech(cThis, new TextToSpeech.OnInitListener() {
@@ -168,14 +170,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
-
             btnSttStart = findViewById(R.id.btn_stt_start);
             btnSttStart.setOnClickListener(new Button.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     System.out.println(":::::::::::::음성인식 시작!");
 
-                            mRecognizer.startListening(SttIntent);
+                    mRecognizer.startListening(SttIntent);
 
 
                 }
@@ -225,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 protected String doInBackground(String... strings) {
                     try {
-
                         socket = new Socket(ip, port);
                         if (socket != null) {
                             ioWork();
@@ -241,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d("chat", "서버로 부터 수신된 메시지>>"
                                                 + msg);
                                         filteringMsg(msg);
+
                                     } catch (IOException e) {
 
                                     }
@@ -264,54 +265,77 @@ public class MainActivity extends AppCompatActivity {
 
                         os = socket.getOutputStream();
                         pw = new PrintWriter(os, true);
+
+                        pw.println(family + "/" + andId);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
 
                 private void filteringMsg(String msg) {
                     try {
                         StringTokenizer token = new StringTokenizer(msg, "/");
                         String protocol = token.nextToken();
-                        String message = token.nextToken();
 
-                        System.out.println("프로토콜:" + protocol + ",메시지:" + message);
+                        String message = "";
+                        if (token.hasMoreTokens()) {
+                            message = token.nextToken();
+                        }
+                        Log.d("chat", "프로토콜:" + protocol + ",메시지:" + message);
+
                         if (protocol.equals("temperature")) {
                             temperature = message;
                             control.setTemperature(message);
                         } else if (protocol.equals("humidity")) {
                             humidity = message;
-                             control.setHumidity(message);
-                            publishProgress(message);
-                        }else if(protocol.equals("start")){
+                            control.setHumidity(message);
+                        } else if (protocol.equals("start")) {
                             String[] longlat = message.split(",");
+                            lon = longlat[0];
+                            lat = longlat[1];
+                            publishProgress();
+                            naviFragment.tMapView.setCenterPoint(127.037573, 37.50265712);
+                            naviFragment.addMarker(37.50265712, 127.037573, "Miri");
+                            Log.d("chat", "protocolstart");
+                          /*
+                          String[] longlat = message.split(",");
                                 lon = longlat[0];
                                 lat = longlat[1];
                                 Log.d("chat",lon+lat);
                                 publishProgress(lon,lat);
                                  Log.d("chat","protocolstart");
+                          */
+                          
+                        } else if (protocol.equals("seatSetting")) {
+                            control.setSeat(Integer.parseInt(message));
+                        } else if (protocol.equals("engineOff")) {
+                            engineOnOff("engineOff");
+                        } else if (protocol.equals("airOn")) {
+                            control.setAirconditioner(Integer.parseInt(message), true);
+                        } else if (protocol.equals("airOff")) {
+                            control.setAirconditioner(Integer.parseInt(message), false);
+                        } else if (protocol.equals("engineOn")) {
+                            engineOnOff("engineOn");
                         }else if(protocol.equals("login")){
-
                             TMapPoint point = tMapGpsManager.getLocation();
                             double lati = point.getLatitude();
                             double longi = point.getLongitude();
                             String sendGPS = "sendGPS/"+lati+","+longi;
                             pw.println(sendGPS);
-
                         }
                     } catch (NoSuchElementException e) {
-
                     }
                 }
 
                 @Override
                 protected void onProgressUpdate(String... values) {
 
+
                     TextView tvTemp = findViewById(R.id.temporature);
                     TextView tvHumi = findViewById(R.id.humidity);
                     tvTemp.setText(temperature + "℃");
                     tvHumi.setText(humidity + "％");
+
                     TextView a = findViewById(R.id.a);
                     TextView b = findViewById(R.id.b);
                     a.setText(lon);
@@ -324,24 +348,45 @@ public class MainActivity extends AppCompatActivity {
 
                         }
                     });
-
-
-
                 }
             }.execute();
-
-
-
-
         }
         //*****************************************************************
-
-
     }
-    public void resetKm(View v){
+
+    public void resetKm(View v) {
         control.setKm(0);
     }
 
+    public void engineOnOff(String OnOff) {
+        if (OnOff.equals("engineOff")) {
+            //엔진이 꺼지면 화면 끄기
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.black).setVisibility(View.VISIBLE);
+                }
+            });
+            //엔진이 꺼지면 현재상태 서버에 업데이트
+            String msg = control.saveState();
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("method", "stateUpdate");
+            map.put("member_id", andId);
+            map.put("member_car_state", msg);
+            Task networkTask = new Task();
+            networkTask.execute(map);
+
+        } else if (OnOff.equals("engineOn")) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.black).setVisibility(View.INVISIBLE);
+                }
+            });
+
+        }
+
+    }
 
     public void replaceFragmentFindAddress() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -356,9 +401,6 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.navi_frag, naviFragment);
         transaction.commit();
     }
-
-
-
     //////////////////////////////////
     private RecognitionListener listener = new RecognitionListener() {
         @Override
@@ -395,9 +437,9 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onResults(Bundle results) {
             String key = "";
-            Date date=new Date(System.currentTimeMillis());
-            SimpleDateFormat sdfNow=new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-            String formatDate=sdfNow.format(date);
+            Date date = new Date(System.currentTimeMillis());
+            SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+            String formatDate = sdfNow.format(date);
 
             key = SpeechRecognizer.RESULTS_RECOGNITION;
             ArrayList<String> mResult = results.getStringArrayList(key);
@@ -409,8 +451,8 @@ public class MainActivity extends AppCompatActivity {
 
             FunVoiceOrderCheck(rs[0]);
 
-            speechAsyncTast=new SpeechAsyncTast();
-            speechAsyncTast.execute(rs[0],formatDate);
+            speechAsyncTast = new SpeechAsyncTast();
+            speechAsyncTast.execute(rs[0], formatDate);
 
             mRecognizer.startListening(SttIntent); // 음성인식이 계속되는 구문이니 필요에 맞게 쓰길
         }
@@ -426,6 +468,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(LogTT, "onEvent::::::::::::");
             txtSystem.setText("onEvent:::::::::::::::" + "\r\n" + txtSystem.getText());
         }
+
     };
 
     //*****************************************************************************************************
@@ -499,6 +542,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (tts != null) {
             tts.stop();
             tts.shutdown();
@@ -509,6 +553,10 @@ public class MainActivity extends AppCompatActivity {
             mRecognizer.cancel();
             mRecognizer = null;
         }
+        if (naviFragment.tMapView != null) {
+            naviFragment.tMapView.setActivated(false);
+        }
+
         try {
             if (socket != null) {
                 socket.close();
@@ -516,16 +564,17 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    class SpeechAsyncTast extends AsyncTask<String,String,String>{
+    class SpeechAsyncTast extends AsyncTask<String, String, String> {
         @Override
-        protected String doInBackground (String...strings){
+        protected String doInBackground(String... strings) {
             try {
                 socket = new Socket("70.12.227.93", 12345);
                 Log.d("확인", "socket다음");
                 if (socket != null) {
-                    speechWork(strings[0],strings[1]);
+                    speechWork(strings[0], strings[1]);
                 }
                 Thread t1 = new Thread(new Runnable() {
                     @Override
@@ -555,11 +604,10 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return "";
         }
 
-        void speechWork (String speech,String sysdate) {
+        void speechWork(String speech, String sysdate) {
             try {
                 is = socket.getInputStream();
                 isr = new InputStreamReader(is);
@@ -567,7 +615,7 @@ public class MainActivity extends AppCompatActivity {
 
                 os = socket.getOutputStream();
                 pw = new PrintWriter(os, true);
-                pw.println("info/" + andId+"/speech/"+speech+"/sysdate/"+sysdate);
+                pw.println("info/" + andId + "/speech/" + speech + "/sysdate/" + sysdate);
                 pw.flush();
 
             } catch (IOException e) {
