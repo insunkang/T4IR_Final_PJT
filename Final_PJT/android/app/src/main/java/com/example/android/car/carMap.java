@@ -13,11 +13,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -32,8 +27,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+
 import com.example.android.MainActivity;
 import com.example.android.R;
+import com.google.android.gms.maps.MapView;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapGpsManager;
 import com.skt.Tmap.TMapMarkerItem;
@@ -41,7 +41,6 @@ import com.skt.Tmap.TMapPOIItem;
 import com.skt.Tmap.TMapPoint;
 import com.skt.Tmap.TMapPolyLine;
 import com.skt.Tmap.TMapView;
-import com.google.android.gms.maps.MapView;
 
 import java.util.ArrayList;
 
@@ -68,7 +67,7 @@ public class carMap extends Fragment {
     NaviAsyncTask naviAsyncTask;
 
 
-
+    Button searchBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -306,8 +305,8 @@ public class carMap extends Fragment {
             });*/
 
 
-            button = rootView.findViewById(R.id.startFirstNavi);
-            button.setOnClickListener(new View.OnClickListener() {
+            searchBtn = rootView.findViewById(R.id.startFirstNavi);
+            searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Log.d("catch", (String) mycarLATText.getText());
@@ -320,8 +319,8 @@ public class carMap extends Fragment {
 
                     searchRoute(point, myCarLoc);
                 }
-
             });
+            searchBtn.setVisibility(View.INVISIBLE);
 
 
             //button.callOnClick();

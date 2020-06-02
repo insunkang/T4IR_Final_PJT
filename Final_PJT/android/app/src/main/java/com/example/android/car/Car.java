@@ -84,6 +84,8 @@ public class Car extends AppCompatActivity {
     ImageView car_air_imgView;
     ImageView car_seat_imgView;
 
+    carMap insunmap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,6 +219,13 @@ public class Car extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(Car.this, Driving_Info.class);
                 startActivity(intent);
+            }
+        });
+
+        car_navi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                insunmap.searchBtn.callOnClick();
             }
         });
 
