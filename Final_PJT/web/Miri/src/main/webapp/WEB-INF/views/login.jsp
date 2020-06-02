@@ -74,11 +74,11 @@
                   </div>
                   
                   <div class="text-center">
-					<img src="/static/img/car_insurance.jpg">
+					<img src="/miri/static/img/car_insurance.jpg">
 				  </div>
                   
                   <div class="text-center">
-                	<a class="large">보험사에선 안 알려주는 자동차 보험 가입팁 4가지</a>
+                	<a class="large">보험사에선 안 알려주는 자동차 보험 가입팁!</a>
               	  </div>
               	  <div class="text-center">
                 	<a class="small">차를 소유한 사람이라면 반드시 가입해야 하는 자동차 보험. 여러분은 어떻게 가입하고 계신가요? 혹시 보험사에서 처음 보여주는 담보와 가입금액 그대로 가입하시진 않으셨나요?</a>

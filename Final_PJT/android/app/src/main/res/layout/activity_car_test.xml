@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:layout_margin="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="125dp">
+            <ImageView
+                android:layout_marginLeft="24dp"
+                android:id="@+id/car_lock_imgView"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"/>
+            <ToggleButton
+                android:checked="false"
+                android:layout_marginVertical="50dp"
+                android:id="@+id/car_lock"
+                android:layout_width="120dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="30dp"
+                android:text="문 잠김"
+                android:layout_gravity="left|top"
+                android:gravity="top|center"
+                android:textOff="문 잠김"
+                android:textOn="문 열림"
+                android:textColor="@color/gray"
+                android:textSize="21dp"
+                android:textStyle="bold"
+                android:background="#00ff0000"/>
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="125dp"
+            android:layout_gravity="right|top">
+            <ImageView
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="25dp"
+                android:id="@+id/car_air_imgView"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"/>
+            <ToggleButton
+                android:checked="false"
+                android:layout_marginVertical="50dp"
+                android:id="@+id/car_air"
+                android:layout_width="120dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="30dp"
+                android:text="공조 Off"
+                android:gravity="top|center"
+                android:textOff="공조 Off"
+                android:textOn="공조 On"
+                android:textColor="@color/gray"
+                android:textSize="21dp"
+                android:textStyle="bold"
+                android:background="#00ff0000"/>
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/car_handle"
+            android:text="drive"
+            android:textColor="@color/white"
+            android:textSize="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="125dp"
+            android:layout_gravity="left|bottom">
+            <ImageView
+                android:layout_marginLeft="24dp"
+                android:id="@+id/car_navi_imgView"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:src="@drawable/car_navi"
+                android:scaleType="fitXY"/>
+            <Button
+                android:layout_marginVertical="50dp"
+                android:id="@+id/car_navi"
+                android:layout_width="120dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="30dp"
+                android:text="내차 찾기"
+                android:gravity="top|center"
+                android:textColor="@color/gray"
+                android:textSize="21dp"
+                android:textStyle="bold"
+                android:background="#00ff0000"/>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="125dp"
+            android:layout_gravity="right|bottom">
+            <ImageView
+                android:layout_marginLeft="24dp"
+                android:id="@+id/car_seat_imgView"
+                android:layout_width="70dp"
+                android:layout_height="50dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/car_seat"/>
+            <Button
+                android:layout_marginVertical="50dp"
+                android:id="@+id/car_seat"
+                android:layout_width="120dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="30dp"
+                android:text="좌석 맞춤"
+                android:gravity="top|center"
+                android:textColor="@color/gray"
+                android:textSize="21dp"
+                android:textStyle="bold"
+                android:background="#00ff0000"/>
+        </FrameLayout>
+
+
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
