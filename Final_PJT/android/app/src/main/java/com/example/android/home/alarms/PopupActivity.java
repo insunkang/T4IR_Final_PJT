@@ -1,4 +1,4 @@
-package com.example.android.home.security;
+package com.example.android.home.alarms;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -15,22 +15,15 @@ public class PopupActivity extends Activity {
 
     TextView txtText;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //타이틀바 없애기
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_popup);
-
-        //UI 객체생성
         txtText = (TextView)findViewById(R.id.txtText);
-
-        //데이터 가져오기
         Intent intent = getIntent();
         final String link = intent.getStringExtra("link");
         txtText.setText("확인하러 가기>>>"+"go");
-
         txtText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -41,20 +34,15 @@ public class PopupActivity extends Activity {
         });
     }
 
-    //확인 버튼 클릭
     public void mOnClose(View v){
-        //데이터 전달하기
         Intent intent = new Intent();
         intent.putExtra("result", "Close Popup");
         setResult(RESULT_OK, intent);
-
-        //액티비티(팝업) 닫기
         finish();
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //바깥레이어 클릭시 안닫히게
         if(event.getAction()==MotionEvent.ACTION_OUTSIDE){
             return false;
         }
@@ -63,7 +51,6 @@ public class PopupActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        //안드로이드 백버튼 막기
         return;
     }
 }

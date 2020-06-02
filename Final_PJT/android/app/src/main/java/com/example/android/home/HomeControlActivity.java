@@ -2,53 +2,40 @@ package com.example.android.home;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.android.Iowork;
 import com.example.android.R;
 import com.example.android.home.air.AirControlActivity;
-import com.example.android.home.gas.GasControlActivity;
+import com.example.android.home.alarms.AlarmsService;
 import com.example.android.home.light.LightControlActivity;
-import com.example.android.home.security.MyService2;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
 
 public class HomeControlActivity extends AppCompatActivity {
 
+    public static String family;
+    public static String id;
     LinearLayout LightControl;
-    LinearLayout GasControl;
     LinearLayout AirControl;
     Intent intent;
-    public static Socket socket;
-    public static Iowork iowork;
-    public static String androidId;
-    InputStream is;
+/*    InputStream is;
     InputStreamReader isr;
     BufferedReader br;
     OutputStream os;
-    PrintWriter pw;
+    PrintWriter pw;*/
 
     @SuppressLint("StaticFieldLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_control);
-
-        Intent notiintent = new Intent(this, MyService2.class);
+        Intent intent2 = getIntent();
+        family = intent2.getStringExtra("member_family");
+        id = intent2.getStringExtra("loginID");
+        Intent notiintent = new Intent(this, AlarmsService.class);
         startService(notiintent);
 
         LightControl = findViewById(R.id.LightControl);
@@ -60,6 +47,7 @@ public class HomeControlActivity extends AppCompatActivity {
             }
         });
 
+/*
         GasControl = findViewById(R.id.GasControl);
         GasControl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +56,7 @@ public class HomeControlActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+*/
 
         AirControl = findViewById(R.id.AirControl);
         AirControl.setOnClickListener(new View.OnClickListener() {

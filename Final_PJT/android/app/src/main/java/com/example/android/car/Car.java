@@ -65,8 +65,8 @@ public class Car extends AppCompatActivity {
     /* ==========================날씨========================== */
     String CITY = "seoul,KR";
     private static String API = "1d05f37dc31eab19ba9ee3c97411cf25";
-    private static String LAT;
-    private static String LON;
+    public static String LAT;
+    public static String LON;
     TextView addressTxt, updated_atTxt, statusTxt, tempTxt, sunriseTxt,
             sunsetTxt, windTxt, pressureTxt, humidityTxt;
 
@@ -77,7 +77,7 @@ public class Car extends AppCompatActivity {
     public static Socket socket;
     public static OutputStream os;
     public static PrintWriter pw;
-
+    carMap.NaviAsyncTask naviAsyncTask;
     stateSelect carStateTask;
 
     ImageView car_lock_imgView;
@@ -249,7 +249,20 @@ public class Car extends AppCompatActivity {
         String arr[] = fvo.getMember_car_state().split("/");
         LAT = arr[5];
         LON = arr[7];
+        TextView startFirstNaviLAT = findViewById(R.id.startFirstNaviLAT);
+        TextView startFirstNaviLON = findViewById(R.id.startFirstNaviLON);
+        startFirstNaviLAT.setText(LAT);
+        startFirstNaviLON.setText(LON);
+
         new weatherTask().execute();
+//        Button button;
+//        button = findViewById(R.id.startFirstNavi);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                naviAsyncTask.execute();
+//            }
+//        });
     }
 
     @Override
@@ -473,5 +486,6 @@ public class Car extends AppCompatActivity {
             return response;
         }
     }
+
 }
 
