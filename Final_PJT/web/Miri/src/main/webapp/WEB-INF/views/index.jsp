@@ -17,17 +17,38 @@
   <!-- Custom fonts for this template-->
   <link href="/miri/static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+<%
+		MemberVO user = (MemberVO)request.getAttribute("user");
+	%>
   <!-- Custom styles for this template-->
   <link href="/miri/static/css/sb-admin-2.min.css" rel="stylesheet">
+<script src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=l7xxfce37b4d926e4607a7d14ba4bba09475"></script>
+			         <script type="text/javascript">
+						function initTmap(){
+							a=<%= user.getMember_car_state().split("/")[5] %>;
+							b=<%= user.getMember_car_state().split("/")[7] %>;
+							
+							var map = new Tmapv2.Map("map_div",  
+							{	
+								
+								
+								center: new Tmapv2.LatLng(a,b), // 지도 초기 좌표
+								width: "890px", 
+								height: "400px",
+								zoom: 15
+							});
+							var marker = new Tmapv2.Marker({
+								position: new Tmapv2.LatLng(a,b),
+								map: map
+							});	
+						} 
+					</script> 
 
 </head>
 
-<body id="page-top">
+<body id="page-top" onload="initTmap()">
 
-	<%
-		MemberVO user = (MemberVO)request.getAttribute("user");
-	%>
+	
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -50,7 +71,7 @@
         <a class="nav-link" href="#">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="#" onclick="window.open('https://www.naver.com', '_blank', 'width=1400px, height=900px, toolbars=no, scrollbars=no, left=300, top=30'); return false;">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Home CCTV</span></a>
       </li>
@@ -416,10 +437,32 @@
               </div>
             </div>
           </div>
+			<!-- Content Row -->
+			          <div class="row">
+			            <div class="col-lg-9.5 mb-10">
+			              <!-- Illustrations -->
+			              <div class="card shadow mb-4">
+			                <div class="card-header py-3">
+			                  <h6 class="m-0 font-weight-bold text-primary">내 차 위치</h6>
+			                </div>
+			                <div class="card-body">
+			                	
+			                
+			                    	<div id ="map_div">
+			                    	
+			                    	</div>
+			                    	
+			                                                 
+			                </div>
+			              </div>
+			            </div>
+			          </div>
 
           <!-- Content Row -->
           <div class="row">
+
             <div class="col-lg-6 mb-4">
+
               <!-- Illustrations -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
@@ -433,9 +476,12 @@
                   <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on unDraw &rarr;</a>
                 </div>
               </div>
+
+             
+
             </div>
           </div>
-
+	
         </div>
         <!-- /.container-fluid -->
 

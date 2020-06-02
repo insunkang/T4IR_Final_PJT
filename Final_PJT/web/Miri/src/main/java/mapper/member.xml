@@ -4,11 +4,11 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="member">
 	<insert id="insert" parameterType="member">
-		insert into member values(#{member_id}, #{member_pass}, '', '')
+		insert into member values(#{member_id}, #{member_pass}, '', 'airconditioner/60/seat/0/lat/37.50636880006275/lon/127.03268433935365', '')
 	</insert>
 	
 	<select id="login" resultType="member" parameterType="member">
-		select m.member_id, m.member_pass
+		select *
 		from member m
 		where member_id=#{member_id} and member_pass=#{member_pass}
 	</select>
