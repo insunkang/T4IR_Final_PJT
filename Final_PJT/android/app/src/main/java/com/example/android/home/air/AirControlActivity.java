@@ -37,7 +37,7 @@ public class  AirControlActivity extends AppCompatActivity {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
-    String androidId = AlarmsService.androidId;
+    String androidId = HomeControlActivity.family + "/" +HomeControlActivity.id;
     Thread t1;
     private Spinner T_spinner;
     ArrayList<Integer> arrayList;

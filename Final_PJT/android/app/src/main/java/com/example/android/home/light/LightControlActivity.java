@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.R;
+import com.example.android.home.HomeControlActivity;
 import com.example.android.home.alarms.AlarmsService;
 
 import java.io.BufferedReader;
@@ -33,7 +34,7 @@ public class LightControlActivity extends AppCompatActivity {
     SeekBar K_seekBar;
     TextView L_txtValue;
     TextView K_txtValue;
-    String androidId = AlarmsService.androidId;
+    String androidId = HomeControlActivity.family + "/" +HomeControlActivity.id;
     Thread t1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

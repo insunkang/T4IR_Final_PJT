@@ -21,10 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">      
+        android:usesCleartextTraffic="true">
         <activity android:name=".home.HomeControlActivity"></activity>
         <activity android:name=".home.air.AirControlActivity"></activity>
-        <activity android:name=".home.gas.GasControlActivity"></activity>
         <activity android:name=".home.light.LightControlActivity"></activity>
         <activity android:name=".car.Car" />
         <activity android:name=".driving.Driving_Info" />

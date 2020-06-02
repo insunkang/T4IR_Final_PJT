@@ -81,7 +81,7 @@ public class AlarmsService extends Service {
                 try {
                     if (socket == null){
                         //androidId = HomeControlActivity.id;
-                        androidId = "1111";
+                        androidId = HomeControlActivity.id;
                         socket = new Socket(Variable.homeServerIP, 23335);
 
                         ioWork();
@@ -191,7 +191,7 @@ public class AlarmsService extends Service {
             br = new BufferedReader(isr);
             os = socket.getOutputStream();
             pw = new PrintWriter(os,true);
-            pw.println("phone/"+androidId);
+            pw.println("phone/"+HomeControlActivity.family+"/"+androidId);
             //pw.flush();
         } catch (IOException e) {
             e.printStackTrace();
