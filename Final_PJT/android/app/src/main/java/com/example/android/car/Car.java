@@ -1,17 +1,13 @@
 package com.example.android.car;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.os.StrictMode;
 import android.os.SystemClock;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,20 +34,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.Socket;
 import java.net.URL;
-
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
-import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -63,11 +54,11 @@ import okhttp3.Response;
 public class Car extends AppCompatActivity {
     private String loginID;
     private String member_family;
-    ImageButton car_handle_img;
+    Button car_handle_img;
     ToggleButton car_lock;
     ToggleButton car_air;
-    ImageButton car_navi;
-    ImageView car_seat;
+    Button car_navi;
+    Button car_seat;
     TextView edit_oil;
     ProgressBar progressBar;
     MemberVO fvo;
@@ -88,6 +79,10 @@ public class Car extends AppCompatActivity {
     public static PrintWriter pw;
 
     stateSelect carStateTask;
+
+    ImageView car_lock_imgView;
+    ImageView car_air_imgView;
+    ImageView car_seat_imgView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +108,17 @@ public class Car extends AppCompatActivity {
         progressBar = findViewById(R.id.oil_progressbar);
         edit_oil = findViewById(R.id.car_oil);
 
-        car_handle_img.setImageResource(R.drawable.car_handle_img);
-        car_navi.setImageResource(R.drawable.car_navi);
-        edit_oil.setText("100");
-        progressBar.setProgress(Integer.parseInt(edit_oil.getText().toString()));
+
+        car_lock_imgView = findViewById(R.id.car_lock_imgView);
+        car_air_imgView = findViewById(R.id.car_air_imgView);
+        car_seat_imgView = findViewById(R.id.car_seat_imgView);
+
+        //car_handle_img.setImageResource(R.drawable.car_handle_img);
+        //car_navi.setImageResource(R.drawable.car_navi);
+
+        car_air.setBackgroundColor(getResources().getColor(R.color.trans));
+        car_lock.setBackgroundColor(getResources().getColor(R.color.trans));
+
 
         Bundle extras = getIntent().getExtras();
         loginID = extras.getString("loginID");
@@ -129,11 +131,11 @@ public class Car extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(car_lock.isChecked()){
-                    car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_open));
+                    car_lock_imgView.setBackground(getResources().getDrawable(R.drawable.car_unlock));
                     Toast.makeText(Car.this,"UNLOCK",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/engineOn");
                 }else{
-                    car_lock.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_lock_close));
+                    car_lock_imgView.setBackground(getResources().getDrawable(R.drawable.car_lock));
                     Toast.makeText(Car.this,"LOCK",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/engineOff");
 
@@ -156,11 +158,13 @@ public class Car extends AppCompatActivity {
                 String air=arr[1];
 
                 if(car_air.isChecked()){
-                    car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_open));
+                    car_air_imgView.setBackground(getResources().getDrawable(R.drawable.car_air_open));
+                    //car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_open));
                     Toast.makeText(Car.this,"FAN ON",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/airOn/"+air);
                 }else{
-                    car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_close));
+                    car_air_imgView.setBackground(getResources().getDrawable(R.drawable.car_air_close));
+                    //car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_close));
                     Toast.makeText(Car.this,"FAN OFF",Toast.LENGTH_SHORT).show();
                     pw.println(member_family+"/"+loginID+"/control/airOff/"+air);
                 }
@@ -182,16 +186,16 @@ public class Car extends AppCompatActivity {
                     @Override
                     protected void onProgressUpdate(String... values) {
                         super.onProgressUpdate(values);
-                        if(car_seat.getVisibility()==View.VISIBLE){
-                            car_seat.setVisibility(View.INVISIBLE);
+                        if(car_seat_imgView.getVisibility()==View.VISIBLE){
+                            car_seat_imgView.setVisibility(View.INVISIBLE);
                         } else {
-                            car_seat.setVisibility(View.VISIBLE);
+                            car_seat_imgView.setVisibility(View.VISIBLE);
                         }
                     }
                     @Override
                     protected void onPostExecute(String s) {
                         super.onPostExecute(s);
-                        car_seat.setVisibility(View.VISIBLE);
+                        car_seat_imgView.setVisibility(View.VISIBLE);
                         carStateTask = new stateSelect();
                         MemberVO vo = new MemberVO(loginID);
                         carStateTask.execute(vo);

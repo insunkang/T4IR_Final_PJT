@@ -8,4 +8,7 @@
     <color name="mBlack">#2B2B2B</color>
     <color name="blue">#46A4E8</color>
     <color name ="mGray">#F0F0F0</color>
+    <color name="bluelink1">#0E344B</color>
+    <color name="bluelink2">#185A7D</color>
+    <color name="trans">#00ff0000</color>
 </resources>

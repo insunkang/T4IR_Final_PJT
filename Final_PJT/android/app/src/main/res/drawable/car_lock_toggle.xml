@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true"
-        android:drawable="@drawable/car_lock_open"/>
+        android:drawable="@drawable/car_unlock"/>
     <item android:state_checked="false"
-        android:drawable="@drawable/car_lock_close"/>
+        android:drawable="@drawable/car_lock"/>
 </selector>
+

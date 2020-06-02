@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_checked="true"
-        android:drawable="@drawable/car_seat_open"/>
+        android:drawable="@drawable/car_seat"/>
     <item android:state_checked="false"
-        android:drawable="@drawable/car_seat_close"/>
+        android:drawable="@drawable/car_seat"/>
 </selector>
