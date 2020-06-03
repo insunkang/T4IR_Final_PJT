@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.android.MainActivity;
 import com.example.android.R;
+import com.example.android.Variable;
 import com.example.android.car.Car;
 
 import java.io.BufferedReader;
@@ -27,9 +28,7 @@ import java.net.Socket;
 import static com.example.android.R.id.driving_left;
 
 public class Driving extends AppCompatActivity {
-    //public final static String DRIVE_URL = "http://70.12.228.195:8091/stream_simple.html";
-    //public final static String DRIVE_URL = "https://sites.google.com/site/ubiaccessmobile/sample_video.mp4";
-    public final static String DRIVE_URL = "http://70.12.228.195:8091/?action=stream";
+    public final static String DRIVE_URL = Variable.carCemeraIP;
     WebView webView;
     Button btn_driving_view_start, btn_driving_view_stop, btn_driving_stop;
     MyAsyncTask myAsyncTask;

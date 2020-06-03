@@ -64,7 +64,7 @@ public class AlarmsService extends Service {
             notificationManager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
         }
         Intent intent2 = new Intent(AlarmsService.this, PopupActivity.class);
-        intent2.putExtra("link", "http://70.12.228.195:8091/stream_simple.html/");
+        intent2.putExtra("link", Variable.CCTVIP);
         PendingIntent pending = PendingIntent.getActivity(AlarmsService.this, 1, intent2, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pending);
         Notification notification = builder.build();
@@ -121,7 +121,7 @@ public class AlarmsService extends Service {
                                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                             notificationManager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
                                         }                                        Intent intent = new Intent(AlarmsService.this, PopupActivity.class);
-                                        intent.putExtra("link", "http://naver.com/");
+                                        intent.putExtra("link", Variable.CCTVIP);
                                         PendingIntent pending = PendingIntent.getActivity(AlarmsService.this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                         builder.setContentIntent(pending);   //PendingIntent 설정
                                         builder.setAutoCancel(true);         //클릭하면 자동으로 알림 삭제
@@ -140,7 +140,7 @@ public class AlarmsService extends Service {
                                             notificationManager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
                                         }
                                         Intent intent = new Intent(AlarmsService.this, PopupActivity.class);
-                                        intent.putExtra("link", "http://naver.com/");
+                                        intent.putExtra("link", Variable.CCTVIP);
                                         PendingIntent pending = PendingIntent.getActivity(AlarmsService.this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                         builder.setContentIntent(pending);   //PendingIntent 설정
                                         builder.setAutoCancel(true);         //클릭하면 자동으로 알림 삭제
@@ -158,7 +158,7 @@ public class AlarmsService extends Service {
                                             notificationManager.createNotificationChannel(new NotificationChannel("default", "기본 채널", NotificationManager.IMPORTANCE_DEFAULT));
                                         }
                                         Intent intent = new Intent(AlarmsService.this, PopupActivity.class);
-                                        intent.putExtra("link", "http://naver.com/");
+                                        intent.putExtra("link", Variable.CCTVIP);
                                         PendingIntent pending = PendingIntent.getActivity(AlarmsService.this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                                         builder.setContentIntent(pending);   //PendingIntent 설정
                                         builder.setAutoCancel(true);         //클릭하면 자동으로 알림 삭제
