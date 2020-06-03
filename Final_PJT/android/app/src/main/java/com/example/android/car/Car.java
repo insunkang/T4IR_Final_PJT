@@ -83,18 +83,17 @@ public class Car extends AppCompatActivity {
     ImageView car_lock_imgView;
     ImageView car_air_imgView;
     ImageView car_seat_imgView;
-
-    carMap insunmap;
+    carMap carMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_car);
 
-        carMap carMap = new carMap();
-        FragmentManager fragmentManager;
+        carMap = new carMap();
+        final FragmentManager fragmentManager;
         fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction;
+        final FragmentTransaction transaction;
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.car_map, carMap);
         transaction.commit();
@@ -125,21 +124,21 @@ public class Car extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         loginID = extras.getString("loginID");
         member_family = extras.getString("member_family");
-        Log.d("msg","로그인 아이디:::"+loginID);
-        Log.d("msg","해당 fam:::"+member_family);
+        Log.d("msg", "로그인 아이디:::" + loginID);
+        Log.d("msg", "해당 fam:::" + member_family);
 
         //시동 버튼 눌렀을 때
         car_lock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(car_lock.isChecked()){
+                if (car_lock.isChecked()) {
                     car_lock_imgView.setBackground(getResources().getDrawable(R.drawable.car_unlock));
-                    Toast.makeText(Car.this,"UNLOCK",Toast.LENGTH_SHORT).show();
-                    pw.println(member_family+"/"+loginID+"/control/engineOn");
-                }else{
+                    Toast.makeText(Car.this, "UNLOCK", Toast.LENGTH_SHORT).show();
+                    pw.println(member_family + "/" + loginID + "/control/engineOn");
+                } else {
                     car_lock_imgView.setBackground(getResources().getDrawable(R.drawable.car_lock));
-                    Toast.makeText(Car.this,"LOCK",Toast.LENGTH_SHORT).show();
-                    pw.println(member_family+"/"+loginID+"/control/engineOff");
+                    Toast.makeText(Car.this, "LOCK", Toast.LENGTH_SHORT).show();
+                    pw.println(member_family + "/" + loginID + "/control/engineOff");
 
                 }
             }
@@ -151,24 +150,24 @@ public class Car extends AppCompatActivity {
                 carStateTask = new stateSelect();
                 MemberVO vo = new MemberVO(loginID);
                 carStateTask.execute(vo);
-                while(carStateTask.getResponse().equals("")){
+                while (carStateTask.getResponse().equals("")) {
                     SystemClock.sleep(10);
                 }
                 Gson gson = new Gson();
                 MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
                 String arr[] = fvo.getMember_car_state().split("/");
-                String air=arr[1];
+                String air = arr[1];
 
-                if(car_air.isChecked()){
+                if (car_air.isChecked()) {
                     car_air_imgView.setBackground(getResources().getDrawable(R.drawable.car_air_open));
                     //car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_open));
-                    Toast.makeText(Car.this,"FAN ON",Toast.LENGTH_SHORT).show();
-                    pw.println(member_family+"/"+loginID+"/control/airOn/"+air);
-                }else{
+                    Toast.makeText(Car.this, "FAN ON", Toast.LENGTH_SHORT).show();
+                    pw.println(member_family + "/" + loginID + "/control/airOn/" + air);
+                } else {
                     car_air_imgView.setBackground(getResources().getDrawable(R.drawable.car_air_close));
                     //car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_close));
-                    Toast.makeText(Car.this,"FAN OFF",Toast.LENGTH_SHORT).show();
-                    pw.println(member_family+"/"+loginID+"/control/airOff/"+air);
+                    Toast.makeText(Car.this, "FAN OFF", Toast.LENGTH_SHORT).show();
+                    pw.println(member_family + "/" + loginID + "/control/airOff/" + air);
                 }
             }
         });
@@ -176,7 +175,7 @@ public class Car extends AppCompatActivity {
         car_seat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AsyncTask<String,String,String>(){
+                new AsyncTask<String, String, String>() {
 
                     @Override
                     protected String doInBackground(String... strings) {
@@ -185,15 +184,17 @@ public class Car extends AppCompatActivity {
                         publishProgress();
                         return null;
                     }
+
                     @Override
                     protected void onProgressUpdate(String... values) {
                         super.onProgressUpdate(values);
-                        if(car_seat_imgView.getVisibility()==View.VISIBLE){
+                        if (car_seat_imgView.getVisibility() == View.VISIBLE) {
                             car_seat_imgView.setVisibility(View.INVISIBLE);
                         } else {
                             car_seat_imgView.setVisibility(View.VISIBLE);
                         }
                     }
+
                     @Override
                     protected void onPostExecute(String s) {
                         super.onPostExecute(s);
@@ -201,14 +202,14 @@ public class Car extends AppCompatActivity {
                         carStateTask = new stateSelect();
                         MemberVO vo = new MemberVO(loginID);
                         carStateTask.execute(vo);
-                        while(carStateTask.getResponse().equals("")){
+                        while (carStateTask.getResponse().equals("")) {
                             SystemClock.sleep(10);
                         }
                         Gson gson = new Gson();
                         MemberVO fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
                         String arr[] = fvo.getMember_car_state().split("/");
-                        String seat=arr[3];
-                        pw.println(member_family+"/"+loginID+"/control/seatSetting/"+seat);
+                        String seat = arr[3];
+                        pw.println(member_family + "/" + loginID + "/control/seatSetting/" + seat);
                     }
                 }.execute();
             }
@@ -225,7 +226,7 @@ public class Car extends AppCompatActivity {
         car_navi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insunmap.searchBtn.callOnClick();
+                carMap.searchBtn.callOnClick();
             }
         });
 
@@ -245,14 +246,14 @@ public class Car extends AppCompatActivity {
         carStateTask = new stateSelect();
         MemberVO vo = new MemberVO(loginID);
         carStateTask.execute(vo);
-        while(carStateTask.getResponse().equals("")){
+        while (carStateTask.getResponse().equals("")) {
             SystemClock.sleep(10);
         }
         Gson gson = new Gson();
         fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
 
-        Log.d("check1",carStateTask.getResponse());
-        if(fvo.getMember_car_state()==null){
+        Log.d("check1", carStateTask.getResponse());
+        if (fvo.getMember_car_state() == null) {
             fvo.setMember_car_state("airconditioner/0/seat/0/lat/37.4990887607019/lon/127.01712430744908");
         }
         String arr[] = fvo.getMember_car_state().split("/");
@@ -297,12 +298,12 @@ public class Car extends AppCompatActivity {
         }
 
         protected String doInBackground(String... args) {
-            String response="";
-            Log.d("msg","weather LAT::::"+LAT);
-            Log.d("msg","weather LON::::"+LON);
-            if(LAT.equals("")&&LAT==null){
+            String response = "";
+            Log.d("msg", "weather LAT::::" + LAT);
+            Log.d("msg", "weather LON::::" + LON);
+            if (LAT.equals("") && LAT == null) {
                 response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?q=" + CITY + "&units=metric&appid=" + API);
-            }else{
+            } else {
                 response = HttpRequest.excuteGet("https://api.openweathermap.org/data/2.5/weather?lat=" + LAT + "&lon=" + LON + "&units=metric&appid=" + API);
             }
             return response;
@@ -345,9 +346,11 @@ public class Car extends AppCompatActivity {
             }
         }
     }
-    class StateTask extends AsyncTask<Integer,String,String> {
-        String lon="";
-        String lat="";
+
+    class StateTask extends AsyncTask<Integer, String, String> {
+        String lon = "";
+        String lat = "";
+
         @Override
         protected String doInBackground(Integer... integers) {
             try {
@@ -363,7 +366,7 @@ public class Car extends AppCompatActivity {
                             String msg;
                             try {
                                 msg = br.readLine();
-                                if(msg==null){
+                                if (msg == null) {
                                     continue;
                                 }
                                 Log.d("chat", "서버로 부터 수신된 메시지>>"
@@ -383,14 +386,15 @@ public class Car extends AppCompatActivity {
             }
             return "";
         }
-        void ioWork(){
+
+        void ioWork() {
             try {
                 is = socket.getInputStream();
                 isr = new InputStreamReader(is);
                 br = new BufferedReader(isr);
                 os = socket.getOutputStream();
-                pw = new PrintWriter(os,true);
-                pw.println(member_family+"/"+loginID);
+                pw = new PrintWriter(os, true);
+                pw.println(member_family + "/" + loginID);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -412,48 +416,50 @@ public class Car extends AppCompatActivity {
             });
         }
 
-        void filteringMsg(String Msg){
-            StringTokenizer st = new StringTokenizer(Msg,"/");
+        void filteringMsg(String Msg) {
+            StringTokenizer st = new StringTokenizer(Msg, "/");
             String protocol = st.nextToken();
             final String message = st.nextToken();
-            if(protocol.equals("Oil")){
+            if (protocol.equals("Oil")) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         progressBar.setProgress(Integer.parseInt(message));
-                        edit_oil.setText(message+"%");
+                        edit_oil.setText(message + "%");
                     }
                 });
-            }else if(protocol.equals("start")){
+            } else if (protocol.equals("start")) {
                 String[] longlat = message.split(",");
                 lon = longlat[0];
                 lat = longlat[1];
-                Log.d("chat",lon+lat);
-                publishProgress(lon,lat);
-                Log.d("chat","protocolstart");
-            }else if(protocol.equals("sendGPS")){
+                Log.d("chat", lon + lat);
+                publishProgress(lon, lat);
+                Log.d("chat", "protocolstart");
+            } else if (protocol.equals("sendGPS")) {
                 String[] longlat = message.split(",");
                 lon = longlat[0];
                 lat = longlat[1];
-                Log.d("chat",lon+lat);
-                publishProgress(lon,lat);
+                Log.d("chat", lon + lat);
+                publishProgress(lon, lat);
             }
 
         }
     }
+
     // 상태값 조회 - 스프링으로 연결
     class stateSelect extends AsyncTask<MemberVO, Void, String> {
         URL url = null;
         BufferedReader br = null;
         String result;
         JSONObject object = new JSONObject();
-        String response="";
+        String response = "";
+
         @Override
         protected String doInBackground(MemberVO... items) {
             try {
                 object.put("member_id", items[0].getMember_id());
 
-                String path = "http://"+Variable.carServerIP+":8088/miri/state/select";
+                String path = "http://" + Variable.springIP + ":8088/miri/state/select";
                 url = new URL(path);
 
                 OkHttpClient client = new OkHttpClient();
@@ -466,7 +472,7 @@ public class Car extends AppCompatActivity {
 
                 Response response = client.newCall(request).execute();
                 result = response.body().string();
-                Log.d("msg", "result::::"+result);
+                Log.d("msg", "result::::" + result);
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

@@ -67,7 +67,7 @@ public class carMap extends Fragment {
     NaviAsyncTask naviAsyncTask;
 
 
-    Button searchBtn;
+     Button searchBtn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -282,16 +282,6 @@ public class carMap extends Fragment {
 //                }
 //            });
 
-            final TextView mycarLATText = rootView.findViewById(R.id.startFirstNaviLAT);
-            final TextView mycarLONText = rootView.findViewById(R.id.startFirstNaviLON);
-            Log.d("catch", (String) mycarLATText.getText());
-            Log.d("catch", (String) mycarLONText.getText());
-            String lastTEXTLAN = (String) mycarLATText.getText();
-            String lastTEXTLON = (String) mycarLONText.getText();
-            Log.d("catch", lastTEXTLAN);
-            Log.d("catch", lastTEXTLON);
-            final String mycarLATStr = lastTEXTLAN;
-            final String mycarLONStr = lastTEXTLON;
 
         //    final TMapPoint myCarLoc = new TMapPoint(37.570841,126.985302);
          /*   getActivity().runOnUiThread(new Runnable() {
@@ -309,18 +299,15 @@ public class carMap extends Fragment {
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("catch", (String) mycarLATText.getText());
-                    Log.d("catch", (String) mycarLONText.getText());
-//                    Double a = Double.parseDouble((String) mycarLATText.getText());
-//                    Double b = Double.parseDouble((String) mycarLONText.getText());
-                    TMapPoint myCarLoc = new TMapPoint(Double.parseDouble((String) mycarLATText.getText()),Double.parseDouble((String) mycarLONText.getText()));
+                    Log.d("check1","와라");
+                    TMapPoint myCarLoc = new TMapPoint(Double.parseDouble(Car.LAT),Double.parseDouble(Car.LON));
                     TMapPoint point = tMapGpsManager.getLocation();
 
 
                     searchRoute(point, myCarLoc);
                 }
             });
-            searchBtn.setVisibility(View.INVISIBLE);
+            //searchBtn.setVisibility(View.VISIBLE);
 
 
             //button.callOnClick();
