@@ -318,7 +318,7 @@ public class NaviFragment extends Fragment {
     public void addMarker(TMapPOIItem poi) {
         TMapMarkerItem item = new TMapMarkerItem();
         item.setTMapPoint(poi.getPOIPoint());
-        Bitmap icon = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_compass)).getBitmap();
+        Bitmap icon = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), R.drawable.insun)).getBitmap();
         item.setIcon(icon);
         item.setPosition(0.5f, 1);
         item.setCalloutTitle(poi.getPOIName());
