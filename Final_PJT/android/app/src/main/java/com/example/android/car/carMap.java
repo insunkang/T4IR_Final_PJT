@@ -300,6 +300,7 @@ public class carMap extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Log.d("check1","와라");
+                    Log.d("check1",Car.LAT);
                     TMapPoint myCarLoc = new TMapPoint(Double.parseDouble(Car.LAT),Double.parseDouble(Car.LON));
                     TMapPoint point = tMapGpsManager.getLocation();
 
@@ -430,7 +431,7 @@ public class carMap extends Fragment {
 //
 //
 //    }
-    private void searchRoute(TMapPoint start, TMapPoint end){
+    public void searchRoute(TMapPoint start, TMapPoint end){
         TMapData data = new TMapData();
         data.findPathDataWithType(TMapData.TMapPathType.PEDESTRIAN_PATH,start, end, new TMapData.FindPathDataListenerCallback() {
             @Override
