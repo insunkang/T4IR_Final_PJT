@@ -24,6 +24,8 @@ import com.example.android.Variable;
 import com.example.android.driving.Driving_Info;
 import com.example.android.member.MemberVO;
 import com.google.gson.Gson;
+import com.skt.Tmap.TMapGpsManager;
+import com.skt.Tmap.TMapPoint;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +53,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class Car extends AppCompatActivity {
+public  class Car extends AppCompatActivity  {
     private String loginID;
     private String member_family;
     Button car_handle_img;
@@ -223,12 +225,7 @@ public class Car extends AppCompatActivity {
             }
         });
 
-        car_navi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                carMap.searchBtn.callOnClick();
-            }
-        });
+
 
         addressTxt = findViewById(R.id.address);
         updated_atTxt = findViewById(R.id.updated_at);
@@ -273,6 +270,16 @@ public class Car extends AppCompatActivity {
 //                naviAsyncTask.execute();
 //            }
 //        });
+        final Button asd = findViewById(R.id.startFirstNavi);
+        car_navi.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+               asd.callOnClick();
+
+
+            }
+        });
     }
 
     @Override
