@@ -71,7 +71,7 @@
         <a class="nav-link" href="#">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
-        <a class="nav-link" href="#" onclick="window.open('https://www.naver.com', '_blank', 'width=1400px, height=900px, toolbars=no, scrollbars=no, left=300, top=30'); return false;">
+        <a class="nav-link" href="#" onclick="window.open('http://70.12.228.195:8091/?action=stream', '_blank', 'width=1400px, height=900px, toolbars=no, scrollbars=no, left=300, top=30'); return false;">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Home CCTV</span></a>
       </li>
