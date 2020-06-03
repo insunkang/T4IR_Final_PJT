@@ -134,6 +134,22 @@ public  class Car extends AppCompatActivity  {
             @Override
             public void onClick(View v) {
                 if (car_lock.isChecked()) {
+                    carStateTask = new stateSelect();
+                    MemberVO vo = new MemberVO(loginID);
+                    carStateTask.execute(vo);
+                    while (carStateTask.getResponse().equals("")) {
+                        SystemClock.sleep(10);
+                    }
+                    Gson gson = new Gson();
+                    fvo = gson.fromJson(carStateTask.getResponse(), MemberVO.class);
+
+                    Log.d("check1", carStateTask.getResponse());
+                    if (fvo.getMember_car_state() == null) {
+                        fvo.setMember_car_state("airconditioner/0/seat/0/lat/37.4990887607019/lon/127.01712430744908");
+                    }
+                    String arr[] = fvo.getMember_car_state().split("/");
+                    LAT = arr[5];
+                    LON = arr[7];
                     car_lock_imgView.setBackground(getResources().getDrawable(R.drawable.car_unlock));
                     Toast.makeText(Car.this, "UNLOCK", Toast.LENGTH_SHORT).show();
                     pw.println(member_family + "/" + loginID + "/control/engineOn");
@@ -161,6 +177,7 @@ public  class Car extends AppCompatActivity  {
                 String air = arr[1];
 
                 if (car_air.isChecked()) {
+
                     car_air_imgView.setBackground(getResources().getDrawable(R.drawable.car_air_open));
                     //car_air.setBackgroundDrawable(getResources().getDrawable(R.drawable.car_air_open));
                     Toast.makeText(Car.this, "FAN ON", Toast.LENGTH_SHORT).show();

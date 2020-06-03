@@ -299,7 +299,6 @@ public class carMap extends Fragment {
             searchBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("check1","와라");
                     Log.d("check1",Car.LAT);
                     TMapPoint myCarLoc = new TMapPoint(Double.parseDouble(Car.LAT),Double.parseDouble(Car.LON));
                     TMapPoint point = tMapGpsManager.getLocation();
