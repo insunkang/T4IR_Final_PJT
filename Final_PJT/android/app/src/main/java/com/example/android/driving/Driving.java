@@ -29,6 +29,9 @@ import static com.example.android.R.id.driving_left;
 
 public class Driving extends AppCompatActivity {
     public final static String DRIVE_URL = Variable.carCemeraIP;
+    //public final static String DRIVE_URL = "http://70.12.228.195:8091/stream_simple.html";
+    ////public final static String DRIVE_URL = "https://sites.google.com/site/ubiaccessmobile/sample_video.mp4";
+    //public final static String DRIVE_URL = "http://70.12.227.21:8091/?action=stream";
     WebView webView;
     Button btn_driving_view_start, btn_driving_view_stop, btn_driving_stop;
     MyAsyncTask myAsyncTask;
