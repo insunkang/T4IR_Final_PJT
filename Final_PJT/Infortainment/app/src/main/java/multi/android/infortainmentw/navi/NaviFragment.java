@@ -323,9 +323,9 @@ public class NaviFragment extends Fragment {
         item.setPosition(0.5f, 1);
         item.setCalloutTitle(poi.getPOIName());
         //item.setCalloutSubTitle(poi.getPOIContent());
-        Bitmap left = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert)).getBitmap();
-        item.setCalloutLeftImage(left);
-        Bitmap right = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
+       // Bitmap left = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert)).getBitmap();
+       // item.setCalloutLeftImage(left);
+        Bitmap right = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_search_category_default)).getBitmap();
         item.setCalloutRightButtonImage(right);
         item.setCanShowCallout(true);
 
