@@ -340,17 +340,17 @@ public class NaviFragment extends Fragment {
 
 
         //Bitmap icon = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_menu_compass)).getBitmap();
-        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_menu_compass);
+        Bitmap icon = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.insun);
         item.setIcon(icon);
         item.setPosition(0.5f, 1);
         item.setTMapPoint(point);
         item.setCalloutTitle(title);
         //item.setCalloutSubTitle("sub " + title);
         //Bitmap left = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_dialog_alert)).getBitmap();
-        Bitmap left = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_dialog_alert);
-        item.setCalloutLeftImage(left);
+       // Bitmap left = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_dialog_alert);
+        //item.setCalloutLeftImage(left);
         //Bitmap right = ((BitmapDrawable) ContextCompat.getDrawable(getActivity(), android.R.drawable.ic_input_get)).getBitmap();
-        Bitmap right = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_input_get);
+        Bitmap right = BitmapFactory.decodeResource(getContext().getResources(), android.R.drawable.ic_search_category_default);
         item.setCalloutRightButtonImage(right);
         item.setCanShowCallout(true);
 
