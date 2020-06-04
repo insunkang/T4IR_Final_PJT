@@ -19,8 +19,9 @@ public class HomeClient {
     Socket socket;
     OutputStream os;
     PrintWriter pw;
-    String homeId;
+    public static String homeId;
     SerialArduinoHomeControl serialObj;
+    
     
 	public HomeClient() {
 		connect();
@@ -29,15 +30,13 @@ public class HomeClient {
 	public void connect() {
 		try {
 			socket = new Socket(Variable.ip, Variable.port);
-			System.out.println("ì ‘ì†ì„±ê³µ...");
+			System.out.println("Á¢¼Ó¼º°ø...");
 	        if (socket != null) {
-	        	System.out.println("ë„ì´ì•„ë‹ˆë‹¤.");
-	        	//ì ‘ì†í•œ í›„ì— í´ë¼ì´ì–¸íŠ¸ì˜ ì•„ì´ë””ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
-	        	homeId = "1111";
+	        	System.out.println("³ÎÀÌ¾Æ´Ï´Ù.");
+	        	//Á¢¼ÓÇÑ ÈÄ¿¡ Å¬¶óÀÌ¾ğÆ®ÀÇ ¾ÆÀÌµğ¸¦ »ı¼ºÇÕ´Ï´Ù.
 	            ioWork();
 	            
-	            //new ArduinoSerialReadUsingEvent(socket, homeId, hpw);
-	        }
+	           }
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
@@ -47,7 +46,6 @@ public class HomeClient {
 	        is = socket.getInputStream();
 	        isr = new InputStreamReader(is);
 	        br = new BufferedReader(isr);
-
 	        os = socket.getOutputStream();
 	        pw = new PrintWriter(os,true);
 	        //
@@ -55,7 +53,7 @@ public class HomeClient {
 	        serialObj.connect(Variable.Serialport);
 	        new ReceiverThread(serialObj.getOutput(), br).start();
 
-	        //ì—¬ê¸°ì„œ í´ë¼ì´ì–¸íŠ¸ì˜ ì•„ì´ë””ë¥¼ ì„œë²„ì—ê²Œ ì „ì†¡í•©ë‹ˆë‹¤.
+	        //¿©±â¼­ Å¬¶óÀÌ¾ğÆ®ÀÇ ¾ÆÀÌµğ¸¦ ¼­¹ö¿¡°Ô Àü¼ÛÇÕ´Ï´Ù.
 	        pw.println("home/"+homeId);
             pw.flush();
 	    } catch (IOException e) {
@@ -64,6 +62,8 @@ public class HomeClient {
 
 	}
 	public static void main(String[] args) {
+		homeId = "DHKD1GH3EHF5DL7/kang1";
+		//homeId = "1111";
 		new HomeClient();
 	}
 }

@@ -1,6 +1,5 @@
 package homeappliances;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -8,6 +7,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.TooManyListenersException;
 
+import client.HomeClient;
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -30,9 +30,9 @@ public class SerialArduinoHomeControl {
 		try {
 			CommPortIdentifier commPortIdentifier = CommPortIdentifier.getPortIdentifier(portName);
 			if (commPortIdentifier.isCurrentlyOwned()) {
-				System.out.println("í¬íŠ¸ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤.");
+				System.out.println("Æ÷Æ® »ç¿ëÇÒ ¼ö ¾ø½À´Ï´Ù.");
 			} else {
-				System.out.println("í¬íŠ¸ ì‚¬ìš©ê°€ëŠ¥.");
+				System.out.println("Æ÷Æ® »ç¿ë°¡´É.");
 				try {
 					CommPort commPort = commPortIdentifier.open("basic_serial", 5000);
 					if (commPort instanceof SerialPort) {
@@ -46,7 +46,7 @@ public class SerialArduinoHomeControl {
 							is = serialPort.getInputStream();
 							os = serialPort.getOutputStream();
 							try {
-								serialPort.addEventListener(new HomeSerialListener(is, pw, "1111"));
+								serialPort.addEventListener(new HomeSerialListener(is, pw, HomeClient.homeId));
 								serialPort.notifyOnDataAvailable(true);
 							} catch (TooManyListenersException e) {
 							}
@@ -55,7 +55,7 @@ public class SerialArduinoHomeControl {
 						} catch (IOException e) {
 						}
 					} else {
-						System.out.println("SerialPortë§Œ ì‘ì—…í•  ìˆ˜ ìˆìŠµë‹ˆë‹¤.");
+						System.out.println("SerialPort¸¸ ÀÛ¾÷ÇÒ ¼ö ÀÖ½À´Ï´Ù.");
 					}
 				} catch (PortInUseException e) {
 					e.printStackTrace();
@@ -88,7 +88,7 @@ public class SerialArduinoHomeControl {
 								toggle = "on";
 							}
 						}
-						System.out.println("í´ë¼ì´ì–¸íŠ¸ì—ê²Œ ë°›ì€ ë©”ì‹œì§€:" + msg);
+						System.out.println("Å¬¶óÀÌ¾ğÆ®¿¡°Ô ¹ŞÀº ¸Ş½ÃÁö:" + msg);
 						if (toggle.equals("off")) {
 							os.write('9');
 						} else if (toggle.equals("on")) {
