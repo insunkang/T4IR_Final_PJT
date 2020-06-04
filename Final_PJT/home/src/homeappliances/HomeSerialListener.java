@@ -8,8 +8,8 @@ import java.util.StringTokenizer;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 
-//ì´ë²¤íŠ¸ì— ëŒ€í•´ ì²˜ë¦¬í•˜ëŠ” ë¦¬ìŠ¤ë„ˆ í´ë˜ìŠ¤
-//ì‹œë¦¬ì–¼í¬íŠ¸ë¡œ ë°ì´í„°ê°€ ì „ì†¡ë ë•Œë§ˆë‹¤ ì´ë²¤íŠ¸ê°€ ë°œìƒí•˜ê³  ì´ë²¤íŠ¸ê°€ ë°œìƒë ë•Œ ë°ì´í„°ë¥¼ ì½ê¸°
+//ÀÌº¥Æ®¿¡ ´ëÇØ Ã³¸®ÇÏ´Â ¸®½º³Ê Å¬·¡½º
+//½Ã¸®¾óÆ÷Æ®·Î µ¥ÀÌÅÍ°¡ Àü¼ÛµÉ¶§¸¶´Ù ÀÌº¥Æ®°¡ ¹ß»ıÇÏ°í ÀÌº¥Æ®°¡ ¹ß»ıµÉ¶§ µ¥ÀÌÅÍ¸¦ ÀĞ±â
 public class HomeSerialListener implements SerialPortEventListener{
 	private InputStream in;
 	private PrintWriter pw;
@@ -21,27 +21,33 @@ public class HomeSerialListener implements SerialPortEventListener{
 		this.pw = pw;
 		this.homeId = homeId;
 	}
-	//ì´ë²¤íŠ¸ê°€ ë°œìƒë ë•Œë§ˆë‹¤ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
-	//ë°œìƒí•œ ì´ë²¤íŠ¸ì´ã…¡ ì •ë³´ë¥¼ ë‹´ê³  ìˆëŠ” ê°ì²´ - SerialPortEvent
+	//ÀÌº¥Æ®°¡ ¹ß»ıµÉ¶§¸¶´Ù È£ÃâµÇ´Â ¸Ş¼Òµå
+	//¹ß»ıÇÑ ÀÌº¥Æ®ÀÌ¤Ñ Á¤º¸¸¦ ´ã°í ÀÖ´Â °´Ã¼ - SerialPortEvent
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		//ì „ì†¡ëœ ë°ì´í„°ê°€ ìˆëŠ” ê²½ìš° ë°ì´í„°ë¥¼ ì½ì–´ì„œ ì½˜ì†”ì— ì¶œë ¥
+		//Àü¼ÛµÈ µ¥ÀÌÅÍ°¡ ÀÖ´Â °æ¿ì µ¥ÀÌÅÍ¸¦ ÀĞ¾î¼­ ÄÜ¼Ö¿¡ Ãâ·Â
 		if(event.getEventType()==SerialPortEvent.DATA_AVAILABLE) {
 			try {
-				//ì „ì†¡ë˜ëŠ” ë°ì´í„°ì˜ í¬ê¸°ë¥¼ ì¶”ì¶œ
+				//Àü¼ÛµÇ´Â µ¥ÀÌÅÍÀÇ Å©±â¸¦ ÃßÃâ
 				int check_size = in.available();
 				byte[] data = new byte[check_size];
 				in.read(data,0,check_size);
 				String msg = new String(data);
 				msg=msg.trim();
-				System.out.println("ë°›ì€ ë°ì´í„°:"+msg);
+				System.out.println("¹ŞÀº µ¥ÀÌÅÍ:"+msg);
 				if(msg!=""&msg!="\n") {
 					st = new StringTokenizer(msg, "/");
 					String classify = st.nextToken();
-					if(classify.equals("pan")) {
+					if(classify.equals("fan")) {
 						pw.println(msg+"/home/"+homeId);
 						pw.flush();
 					}else if(classify.equals("pirLed")) {
+						pw.println(msg+"/home/"+homeId);
+						pw.flush();
+					}else if (classify.equals("flame")) {
+						pw.println(msg+"/home/"+homeId);
+						pw.flush();
+					}else if (classify.equals("gas")) {
 						pw.println(msg+"/home/"+homeId);
 						pw.flush();
 					}
